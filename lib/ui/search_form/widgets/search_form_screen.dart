@@ -32,9 +32,12 @@ class SearchFormScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
-      onPopInvokedWithResult: (didPop, r) {
+      onPopInvoked: (didPop) {
         if (!didPop) context.go(Routes.home);
       },
+      // onPopInvokedWithResult: (didPop, r) {
+      //   if (!didPop) context.go(Routes.home);
+      // },
       child: Scaffold(
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,

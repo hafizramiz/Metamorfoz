@@ -49,9 +49,12 @@ class _ResultsScreenState extends State<ResultsScreen> {
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
-      onPopInvokedWithResult: (didPop, r) {
+      onPopInvoked: (didPop) {
         if (!didPop) context.go(Routes.search);
       },
+      // onPopInvokedWithResult: (didPop, r) {
+      //   if (!didPop) context.go(Routes.search);
+      // },
       child: Scaffold(
         body: ListenableBuilder(
           listenable: widget.viewModel.search,

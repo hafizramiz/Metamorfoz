@@ -52,8 +52,8 @@ class ErrorIndicator extends StatelessWidget {
         FilledButton(
           onPressed: onPressed,
           style: const ButtonStyle(
-            backgroundColor: WidgetStatePropertyAll(AppColors.red1),
-            foregroundColor: WidgetStatePropertyAll(Colors.white),
+            // backgroundColor: WidgetStatePropertyAll(AppColors.red1),
+            // foregroundColor: WidgetStatePropertyAll(Colors.white),
           ),
           child: Text(label),
         ),
