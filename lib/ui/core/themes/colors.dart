@@ -24,9 +24,9 @@ abstract final class AppColors {
     surface: Colors.white,
     onSurface: AppColors.black1,
     error: Colors.white,
-    onError: Colors.red,
-    background: Colors.red,
-    onBackground: Colors.red,
+    onError: Colors.green,
+    background: Colors.green,
+    onBackground: Colors.green,
   );
 
   static const darkColorScheme = ColorScheme(
@@ -38,8 +38,8 @@ abstract final class AppColors {
     surface: AppColors.black1,
     onSurface: Colors.white,
     error: Colors.black,
-    onError: AppColors.red1,
-    background: AppColors.red1,
-    onBackground: AppColors.red1,
+    onError: Colors.green,
+    background: Colors.green,
+    onBackground:Colors.green,
   );
 }
