@@ -26,12 +26,8 @@ mixin _$Continent {
   /// e.g. 'https://rstr.in/google/tripedia/TmR12QdlVTT'
   String get imageUrl => throw _privateConstructorUsedError;
 
-  /// Serializes this Continent to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of Continent
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $ContinentCopyWith<Continent> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -54,8 +50,6 @@ class _$ContinentCopyWithImpl<$Res, $Val extends Continent>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of Continent
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -94,8 +88,6 @@ class __$$ContinentImplCopyWithImpl<$Res>
       _$ContinentImpl _value, $Res Function(_$ContinentImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of Continent
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -146,13 +138,11 @@ class _$ContinentImpl implements _Continent {
                 other.imageUrl == imageUrl));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, name, imageUrl);
 
-  /// Create a copy of Continent
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$ContinentImplCopyWith<_$ContinentImpl> get copyWith =>
@@ -174,18 +164,16 @@ abstract class _Continent implements Continent {
   factory _Continent.fromJson(Map<String, dynamic> json) =
       _$ContinentImpl.fromJson;
 
-  /// e.g. 'Europe'
   @override
+
+  /// e.g. 'Europe'
   String get name;
+  @override
 
   /// e.g. 'https://rstr.in/google/tripedia/TmR12QdlVTT'
-  @override
   String get imageUrl;
-
-  /// Create a copy of Continent
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$ContinentImplCopyWith<_$ContinentImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

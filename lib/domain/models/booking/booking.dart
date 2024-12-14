@@ -10,6 +10,8 @@ import '../destination/destination.dart';
 part 'booking.freezed.dart';
 part 'booking.g.dart';
 
+
+
 @freezed
 class Booking with _$Booking {
   const factory Booking({

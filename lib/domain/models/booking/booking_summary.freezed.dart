@@ -32,12 +32,8 @@ mixin _$BookingSummary {
   /// End date of the booking
   DateTime get endDate => throw _privateConstructorUsedError;
 
-  /// Serializes this BookingSummary to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of BookingSummary
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $BookingSummaryCopyWith<BookingSummary> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -61,8 +57,6 @@ class _$BookingSummaryCopyWithImpl<$Res, $Val extends BookingSummary>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of BookingSummary
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -111,8 +105,6 @@ class __$$BookingSummaryImplCopyWithImpl<$Res>
       _$BookingSummaryImpl _value, $Res Function(_$BookingSummaryImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of BookingSummary
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -187,13 +179,11 @@ class _$BookingSummaryImpl implements _BookingSummary {
             (identical(other.endDate, endDate) || other.endDate == endDate));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, id, name, startDate, endDate);
 
-  /// Create a copy of BookingSummary
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$BookingSummaryImplCopyWith<_$BookingSummaryImpl> get copyWith =>
@@ -218,26 +208,24 @@ abstract class _BookingSummary implements BookingSummary {
   factory _BookingSummary.fromJson(Map<String, dynamic> json) =
       _$BookingSummaryImpl.fromJson;
 
-  /// Booking id
   @override
+
+  /// Booking id
   int get id;
+  @override
 
   /// Name to be displayed
-  @override
   String get name;
+  @override
 
   /// Start date of the booking
-  @override
   DateTime get startDate;
+  @override
 
   /// End date of the booking
-  @override
   DateTime get endDate;
-
-  /// Create a copy of BookingSummary
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$BookingSummaryImplCopyWith<_$BookingSummaryImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

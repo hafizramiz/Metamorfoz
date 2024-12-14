@@ -39,12 +39,8 @@ mixin _$BookingApiModel {
   /// List of chosen activities
   List<String> get activitiesRef => throw _privateConstructorUsedError;
 
-  /// Serializes this BookingApiModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of BookingApiModel
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $BookingApiModelCopyWith<BookingApiModel> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -74,8 +70,6 @@ class _$BookingApiModelCopyWithImpl<$Res, $Val extends BookingApiModel>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of BookingApiModel
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -140,8 +134,6 @@ class __$$BookingApiModelImplCopyWithImpl<$Res>
       _$BookingApiModelImpl _value, $Res Function(_$BookingApiModelImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of BookingApiModel
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -249,14 +241,12 @@ class _$BookingApiModelImpl implements _BookingApiModel {
                 .equals(other._activitiesRef, _activitiesRef));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, id, startDate, endDate, name,
       destinationRef, const DeepCollectionEquality().hash(_activitiesRef));
 
-  /// Create a copy of BookingApiModel
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$BookingApiModelImplCopyWith<_$BookingApiModelImpl> get copyWith =>
@@ -283,35 +273,33 @@ abstract class _BookingApiModel implements BookingApiModel {
   factory _BookingApiModel.fromJson(Map<String, dynamic> json) =
       _$BookingApiModelImpl.fromJson;
 
-  /// Booking ID. Generated when stored in server.
   @override
+
+  /// Booking ID. Generated when stored in server.
   int? get id;
+  @override
 
   /// Start date of the trip
-  @override
   DateTime get startDate;
+  @override
 
   /// End date of the trip
-  @override
   DateTime get endDate;
+  @override
 
   /// Booking name
   /// Should be "Destination, Continent"
-  @override
   String get name;
+  @override
 
   /// Destination of the trip
-  @override
   String get destinationRef;
+  @override
 
   /// List of chosen activities
-  @override
   List<String> get activitiesRef;
-
-  /// Create a copy of BookingApiModel
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$BookingApiModelImplCopyWith<_$BookingApiModelImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

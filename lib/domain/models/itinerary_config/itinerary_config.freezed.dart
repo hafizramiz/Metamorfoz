@@ -38,12 +38,8 @@ mixin _$ItineraryConfig {
   /// Selected [Activity] references
   List<String> get activities => throw _privateConstructorUsedError;
 
-  /// Serializes this ItineraryConfig to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of ItineraryConfig
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $ItineraryConfigCopyWith<ItineraryConfig> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -73,8 +69,6 @@ class _$ItineraryConfigCopyWithImpl<$Res, $Val extends ItineraryConfig>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of ItineraryConfig
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -139,8 +133,6 @@ class __$$ItineraryConfigImplCopyWithImpl<$Res>
       _$ItineraryConfigImpl _value, $Res Function(_$ItineraryConfigImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of ItineraryConfig
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -249,14 +241,12 @@ class _$ItineraryConfigImpl implements _ItineraryConfig {
                 .equals(other._activities, _activities));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, continent, startDate, endDate,
       guests, destination, const DeepCollectionEquality().hash(_activities));
 
-  /// Create a copy of ItineraryConfig
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$ItineraryConfigImplCopyWith<_$ItineraryConfigImpl> get copyWith =>
@@ -283,34 +273,32 @@ abstract class _ItineraryConfig implements ItineraryConfig {
   factory _ItineraryConfig.fromJson(Map<String, dynamic> json) =
       _$ItineraryConfigImpl.fromJson;
 
-  /// [Continent] name
   @override
+
+  /// [Continent] name
   String? get continent;
+  @override
 
   /// Start date (check in) of itinerary
-  @override
   DateTime? get startDate;
+  @override
 
   /// End date (check out) of itinerary
-  @override
   DateTime? get endDate;
+  @override
 
   /// Number of guests
-  @override
   int? get guests;
+  @override
 
   /// Selected [Destination] reference
-  @override
   String? get destination;
+  @override
 
   /// Selected [Activity] references
-  @override
   List<String> get activities;
-
-  /// Create a copy of ItineraryConfig
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$ItineraryConfigImplCopyWith<_$ItineraryConfigImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

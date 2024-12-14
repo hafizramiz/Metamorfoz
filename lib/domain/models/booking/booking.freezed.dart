@@ -36,12 +36,8 @@ mixin _$Booking {
   /// List of chosen activities
   List<Activity> get activity => throw _privateConstructorUsedError;
 
-  /// Serializes this Booking to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of Booking
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $BookingCopyWith<Booking> get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -70,8 +66,6 @@ class _$BookingCopyWithImpl<$Res, $Val extends Booking>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of Booking
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -105,8 +99,6 @@ class _$BookingCopyWithImpl<$Res, $Val extends Booking>
     ) as $Val);
   }
 
-  /// Create a copy of Booking
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $DestinationCopyWith<$Res> get destination {
@@ -142,8 +134,6 @@ class __$$BookingImplCopyWithImpl<$Res>
       _$BookingImpl _value, $Res Function(_$BookingImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of Booking
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -239,14 +229,12 @@ class _$BookingImpl implements _Booking {
             const DeepCollectionEquality().equals(other._activity, _activity));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, id, startDate, endDate,
       destination, const DeepCollectionEquality().hash(_activity));
 
-  /// Create a copy of Booking
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$BookingImplCopyWith<_$BookingImpl> get copyWith =>
@@ -270,31 +258,29 @@ abstract class _Booking implements Booking {
 
   factory _Booking.fromJson(Map<String, dynamic> json) = _$BookingImpl.fromJson;
 
+  @override
+
   /// Optional ID of the booking.
   /// May be null if the booking is not yet stored.
-  @override
   int? get id;
+  @override
 
   /// Start date of the trip
-  @override
   DateTime get startDate;
+  @override
 
   /// End date of the trip
-  @override
   DateTime get endDate;
+  @override
 
   /// Destination of the trip
-  @override
   Destination get destination;
+  @override
 
   /// List of chosen activities
-  @override
   List<Activity> get activity;
-
-  /// Create a copy of Booking
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$BookingImplCopyWith<_$BookingImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

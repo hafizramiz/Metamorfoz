@@ -51,12 +51,8 @@ mixin _$Activity {
   /// e.g. 'https://storage.googleapis.com/tripedia-images/activities/alaska_glacier-trekking-and-ice-climbing.jpg'
   String get imageUrl => throw _privateConstructorUsedError;
 
-  /// Serializes this Activity to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of Activity
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $ActivityCopyWith<Activity> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -89,8 +85,6 @@ class _$ActivityCopyWithImpl<$Res, $Val extends Activity>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of Activity
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -179,8 +173,6 @@ class __$$ActivityImplCopyWithImpl<$Res>
       _$ActivityImpl _value, $Res Function(_$ActivityImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of Activity
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -328,7 +320,7 @@ class _$ActivityImpl implements _Activity {
                 other.imageUrl == imageUrl));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -343,9 +335,7 @@ class _$ActivityImpl implements _Activity {
       ref,
       imageUrl);
 
-  /// Create a copy of Activity
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$ActivityImplCopyWith<_$ActivityImpl> get copyWith =>
@@ -375,51 +365,49 @@ abstract class _Activity implements Activity {
   factory _Activity.fromJson(Map<String, dynamic> json) =
       _$ActivityImpl.fromJson;
 
-  /// e.g. 'Glacier Trekking and Ice Climbing'
   @override
+
+  /// e.g. 'Glacier Trekking and Ice Climbing'
   String get name;
+  @override
 
   /// e.g. 'Embark on a thrilling adventure exploring the awe-inspiring glaciers of Alaska. Hike across the icy terrain, marvel at the deep blue crevasses, and even try your hand at ice climbing for an unforgettable experience.'
-  @override
   String get description;
+  @override
 
   /// e.g. 'Matanuska Glacier or Mendenhall Glacier'
-  @override
   String get locationName;
+  @override
 
   /// Duration in days.
   /// e.g. 8
-  @override
   int get duration;
+  @override
 
   /// e.g. 'morning'
-  @override
   TimeOfDay get timeOfDay;
+  @override
 
   /// e.g. false
-  @override
   bool get familyFriendly;
+  @override
 
   /// e.g. 4
-  @override
   int get price;
+  @override
 
   /// e.g. 'alaska'
-  @override
   String get destinationRef;
+  @override
 
   /// e.g. 'glacier-trekking-and-ice-climbing'
-  @override
   String get ref;
+  @override
 
   /// e.g. 'https://storage.googleapis.com/tripedia-images/activities/alaska_glacier-trekking-and-ice-climbing.jpg'
-  @override
   String get imageUrl;
-
-  /// Create a copy of Activity
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$ActivityImplCopyWith<_$ActivityImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

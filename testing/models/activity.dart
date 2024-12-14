@@ -9,7 +9,7 @@ const kActivity = Activity(
   destinationRef: 'DESTINATION',
   duration: 3,
   familyFriendly: true,
-  imageUrl: 'http://example.com/img.png',
+  imageUrl: 'http://example.com/UIState.png',
   locationName: 'LOCATION NAME',
   name: 'NAME',
   price: 3,

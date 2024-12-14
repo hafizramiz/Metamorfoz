@@ -41,12 +41,8 @@ mixin _$Destination {
   /// e.g. 'https://storage.googleapis.com/tripedia-images/destinations/alaska.jpg'
   String get imageUrl => throw _privateConstructorUsedError;
 
-  /// Serializes this Destination to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of Destination
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $DestinationCopyWith<Destination> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -77,8 +73,6 @@ class _$DestinationCopyWithImpl<$Res, $Val extends Destination>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of Destination
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -149,8 +143,6 @@ class __$$DestinationImplCopyWithImpl<$Res>
       _$DestinationImpl _value, $Res Function(_$DestinationImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of Destination
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -268,14 +260,12 @@ class _$DestinationImpl implements _Destination {
                 other.imageUrl == imageUrl));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, ref, name, country, continent,
       knownFor, const DeepCollectionEquality().hash(_tags), imageUrl);
 
-  /// Create a copy of Destination
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$DestinationImplCopyWith<_$DestinationImpl> get copyWith =>
@@ -302,38 +292,36 @@ abstract class _Destination implements Destination {
   factory _Destination.fromJson(Map<String, dynamic> json) =
       _$DestinationImpl.fromJson;
 
-  /// e.g. 'alaska'
   @override
+
+  /// e.g. 'alaska'
   String get ref;
+  @override
 
   /// e.g. 'Alaska'
-  @override
   String get name;
+  @override
 
   /// e.g. 'United States'
-  @override
   String get country;
+  @override
 
   /// e.g. 'North America'
-  @override
   String get continent;
+  @override
 
   /// e.g. 'Alaska is a haven for outdoor enthusiasts ...'
-  @override
   String get knownFor;
+  @override
 
   /// e.g. ['Mountain', 'Off-the-beaten-path', 'Wildlife watching']
-  @override
   List<String> get tags;
+  @override
 
   /// e.g. 'https://storage.googleapis.com/tripedia-images/destinations/alaska.jpg'
-  @override
   String get imageUrl;
-
-  /// Create a copy of Destination
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$DestinationImplCopyWith<_$DestinationImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

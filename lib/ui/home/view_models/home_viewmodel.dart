@@ -13,7 +13,13 @@ import '../../../domain/models/booking/booking_summary.dart';
 import '../../../domain/models/user/user.dart';
 import '../../../utils/command.dart';
 import '../../../utils/result.dart';
-
+/// Homeview model icinde birden fazla repository kullanilabilir.
+/// Bu ornekte BookingRepository ve UserRepository kullanilmistir.
+/// Aralarında  many to many iliski vardır.
+/// Reposıtorler vıew model ıcınde private olarak tanımlanır.
+/// Diger turlu view'dan direkt repository'e erisim saglanabilir.
+/// Bunu istemiyoruz. Cunku view direk repository'e erismemesi gerekir
+/// Repository Data Layerdir. Ama view UI Layerdir.
 class HomeViewModel extends ChangeNotifier {
   HomeViewModel({
     required BookingRepository bookingRepository,
@@ -93,3 +99,8 @@ class HomeViewModel extends ChangeNotifier {
     }
   }
 }
+
+/// UI State nedir?
+/// View modelin view'a gonderdigi data UI State olarak bilinir.
+/// Bu data sayesinde view tarafinda UI render edilir.UI state
+/// immutable olmalidir. Yani degistirilemez.

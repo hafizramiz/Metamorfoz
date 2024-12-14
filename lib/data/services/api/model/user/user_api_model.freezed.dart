@@ -32,12 +32,8 @@ mixin _$UserApiModel {
   /// The user's picture URL.
   String get picture => throw _privateConstructorUsedError;
 
-  /// Serializes this UserApiModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of UserApiModel
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $UserApiModelCopyWith<UserApiModel> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -61,8 +57,6 @@ class _$UserApiModelCopyWithImpl<$Res, $Val extends UserApiModel>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of UserApiModel
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -111,8 +105,6 @@ class __$$UserApiModelImplCopyWithImpl<$Res>
       _$UserApiModelImpl _value, $Res Function(_$UserApiModelImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of UserApiModel
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -186,13 +178,11 @@ class _$UserApiModelImpl implements _UserApiModel {
             (identical(other.picture, picture) || other.picture == picture));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, id, name, email, picture);
 
-  /// Create a copy of UserApiModel
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$UserApiModelImplCopyWith<_$UserApiModelImpl> get copyWith =>
@@ -216,26 +206,24 @@ abstract class _UserApiModel implements UserApiModel {
   factory _UserApiModel.fromJson(Map<String, dynamic> json) =
       _$UserApiModelImpl.fromJson;
 
-  /// The user's ID.
   @override
+
+  /// The user's ID.
   String get id;
+  @override
 
   /// The user's name.
-  @override
   String get name;
+  @override
 
   /// The user's email.
-  @override
   String get email;
+  @override
 
   /// The user's picture URL.
-  @override
   String get picture;
-
-  /// Create a copy of UserApiModel
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$UserApiModelImplCopyWith<_$UserApiModelImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
