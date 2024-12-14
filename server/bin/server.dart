@@ -4,15 +4,19 @@
 
 import 'dart:io';
 
-import 'package:compass_server/middleware/auth.dart';
-import 'package:compass_server/routes/booking.dart';
-import 'package:compass_server/routes/continent.dart';
-import 'package:compass_server/routes/destination.dart';
-import 'package:compass_server/routes/login.dart';
-import 'package:compass_server/routes/user.dart';
+import 'package:server/middleware/auth.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf/shelf_io.dart';
+
+import '../lib/routes/booking.dart';
+import '../lib/routes/continent.dart';
+import '../lib/routes/destination.dart';
+import '../lib/routes/login.dart';
+import '../lib/routes/user.dart';
 import 'package:shelf_router/shelf_router.dart';
+
+
+
 
 // Configure routes.
 final _router = Router()

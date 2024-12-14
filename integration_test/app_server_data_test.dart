@@ -20,7 +20,7 @@
 //       // Start the dart server
 //       p = await Process.start(
 //         'dart',
-//         ['run', 'bin/compass_server.dart'],
+//         ['run', 'bin/server.dart'],
 //         environment: {'PORT': port},
 //         // Relative to the app/ folder
 //         workingDirectory: '../server',

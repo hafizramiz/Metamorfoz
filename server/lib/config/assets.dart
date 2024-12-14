@@ -9,8 +9,8 @@ import '../model/activity/activity.dart';
 import '../model/destination/destination.dart';
 
 abstract final class Assets {
-  static const _activities = '../app/assets/activities.json';
-  static const _destinations = '../app/assets/destinations.json';
+  static const _activities = '../assets/activities.json';
+  static const _destinations = '../assets/destinations.json';
 
   static final List<Destination> destinations =
       (json.decode(File(Assets._destinations).readAsStringSync()) as List)
