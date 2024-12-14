@@ -46,6 +46,10 @@ GoRouter router(
         ),
         GoRoute(
           path: Routes.home,
+          /// Burda page builder yerine builder'da kullanilabilir. Tek farki
+          /// pageBuilder ile platform spesficik bir safya gecisi yapilabilir
+
+
           builder: (context, state) {
             final viewModel = HomeViewModel(
               bookingRepository: context.read(),

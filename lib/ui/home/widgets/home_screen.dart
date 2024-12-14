@@ -4,6 +4,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:metamorfoz/ui/auth/logout/widgets/logout_button.dart';
 
 import '../../../domain/models/booking/booking_summary.dart';
 import '../../../routing/routes.dart';
@@ -15,19 +16,37 @@ import '../../core/ui/error_indicator.dart';
 import '../view_models/home_viewmodel.dart';
 import 'home_title.dart';
 
+
+
+
+///[HomeScreen] tek bir view'dir Scaffold'i olan ve view routing yapilan bir view'dir.
+///Bu view'in bir tane view moddeli vardir. [HomeViewModel]
+/// Eger bir view olsaydi ve bu view birden fazla yerde kullanilacak olsaydi
+/// onu ayrirdik. O zaman onun ayri vir view modeli olurdu
+/// [LogoutButton] gibi. ordaki aciklamayi okuyarak tam anlayabilirsin.
+
+
+
 const String bookingButtonKey = 'booking-button';
 
+
+/// [HomeScreen] render etmek icin viewmodel icindeki state'e ihtiyac duyar.
+/// O view modele erismek icin view'in constructor'ina arguman olarak gecilir.
 class HomeScreen extends StatefulWidget {
   const HomeScreen({
     super.key,
     required this.viewModel,
   });
 
+  /// final parametere olarak tanimlanir.
   final HomeViewModel viewModel;
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
+
+
+/// Artik View model icindeki state'e erisebiliriz.
 
 class _HomeScreenState extends State<HomeScreen> {
   @override
@@ -55,16 +74,16 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         title: Text("HomeScreen"),
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        // Workaround for https://github.com/flutter/flutter/issues/115358#issuecomment-2117157419
-        heroTag: null,
-        key: const ValueKey(bookingButtonKey),
-        onPressed: () => context.go(Routes.search),
-        label: Text(AppLocalization.of(context).bookNewTrip),
-        icon: const Icon(Icons.add_location_outlined),
-      ),
+      // floatingActionButton: FloatingActionButton.extended(
+      //   // Workaround for https://github.com/flutter/flutter/issues/115358#issuecomment-2117157419
+      //   heroTag: null,
+      //   key: const ValueKey(bookingButtonKey),
+      //   onPressed: () => context.go(Routes.search),
+      //   label: Text(AppLocalization.of(context).bookNewTrip),
+      //   icon: const Icon(Icons.add_location_outlined),
+      // ),
       body: SafeArea(
-        top: true,
+        top: false,
         bottom: true,
         child: ListenableBuilder(
           listenable: widget.viewModel.load,
