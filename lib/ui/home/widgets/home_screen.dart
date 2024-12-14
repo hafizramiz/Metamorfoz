@@ -52,6 +52,9 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text("HomeScreen"),
+      ),
       floatingActionButton: FloatingActionButton.extended(
         // Workaround for https://github.com/flutter/flutter/issues/115358#issuecomment-2117157419
         heroTag: null,

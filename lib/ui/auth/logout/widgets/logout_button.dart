@@ -3,10 +3,22 @@
 // found in the LICENSE file.
 
 import 'package:flutter/material.dart';
+import 'package:metamorfoz/ui/home/widgets/home_screen.dart';
 
 import '../../../core/localization/applocalization.dart';
 import '../../../core/themes/colors.dart';
 import '../view_models/logout_viewmodel.dart';
+
+
+/// View nedir?
+/// View bazen tum ekran olabilir. Kendine ait bir scaffoldu olan altinda da
+/// widget'lari olan. [HomeScreen] gibi
+/// Bazen de sadece tek bir UI elementi olabilir. [LogoutButton] gibi.
+/// Komple uygulamanin diger alanlarinda kullanilmak uzere kendi icinde fonksiyonlari olan
+/// bir widget olabilir. [LogoutButton] gibi. Bu da bir view'dir.
+/// [LogoutButton] view'nin ayrica bir view model'i [LogoutViewModel] vardir.
+
+
 
 class LogoutButton extends StatefulWidget {
   const LogoutButton({
