@@ -7,13 +7,13 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 
-
 import '../../../data/repositories/booking/booking_repository.dart';
 import '../../../data/repositories/user/user_repository.dart';
 import '../../../domain/models/booking/booking_summary.dart';
 import '../../../domain/models/user/user.dart';
 import '../../../utils/command.dart';
 import '../../../utils/result.dart';
+
 /// Homeview model icinde birden fazla repository kullanilabilir.
 /// Bu ornekte BookingRepository ve UserRepository kullanilmistir.
 /// Aralarında  many to many iliski vardır.
@@ -39,9 +39,11 @@ class HomeViewModel extends ChangeNotifier {
 
   final BookingRepository _bookingRepository;
   final UserRepository _userRepository;
+
   /// Loglari yonetmek icin kullanilan bir paket var.logging: ^1.2.0
   /// Bu paket kullanilarak loglama yapilabilir.Once bir nesne olustur. Daha sonra
   final _log = Logger('HomeViewModel');
+
   /// metotlarini kullan.
 
   List<BookingSummary> _bookings = [];
@@ -54,11 +56,12 @@ class HomeViewModel extends ChangeNotifier {
 
   User? get user => _user;
 
-
-
   /// [_load] methodu ile veriler cekilir.
+  /// Bu metot repository katmanina gider ordaki metotu calistirir.
   Future<Result> _load() async {
-    _log.fine('_load started');/// Fine leveldaki loglama icin kullanilir.
+    _log.fine('_load started');
+
+    /// Fine leveldaki loglama icin kullanilir.
     _log.config("config");
     _log.info(":info");
     _log.warning("warning");
@@ -90,6 +93,7 @@ class HomeViewModel extends ChangeNotifier {
   }
 
   Future<Result<void>> _deleteBooking(int id) async {
+    print("_deleteBooking started");
     try {
       final resultDelete = await _bookingRepository.delete(id);
       switch (resultDelete) {

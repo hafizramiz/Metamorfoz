@@ -71,7 +71,7 @@ class BookingRepositoryLocal implements BookingRepository {
   Future<void> _createDefaultBooking() async {
     // create a default booking the first time
     if (_bookings.isEmpty) {
-      final destination = (await _localDataService.getDestinations()).first;
+      final destination = (await _localDataService.getDestinations())[3];
       final activities = (await _localDataService.getActivities())
           .where((activity) => activity.destinationRef == destination.ref)
           .take(4)

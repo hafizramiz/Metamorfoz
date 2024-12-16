@@ -4,6 +4,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
+import 'package:metamorfoz/ui/metamorfoz/metamorfoz_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../data/repositories/auth/auth_repository.dart';
@@ -44,11 +45,12 @@ GoRouter router(
             );
           },
         ),
+
         GoRoute(
           path: Routes.home,
+
           /// Burda page builder yerine builder'da kullanilabilir. Tek farki
           /// pageBuilder ile platform spesficik bir safya gecisi yapilabilir
-
 
           builder: (context, state) {
             final viewModel = HomeViewModel(
@@ -134,6 +136,19 @@ GoRouter router(
               ],
             ),
           ],
+        ),
+
+        /// Yeni eklediklerim
+
+        GoRoute(
+          path: Routes.metamorfoz,
+          builder: (context, state) {
+            final viewModel = HomeViewModel(
+              bookingRepository: context.read(),
+              userRepository: context.read(),
+            );
+            return MetamorfozScreen(viewModel: viewModel);
+          },
         ),
       ],
     );

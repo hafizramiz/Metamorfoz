@@ -38,7 +38,7 @@ class HomeScreen extends StatefulWidget {
     required this.viewModel,
   });
 
-  /// final parametere olarak tanimlanir.
+  /// final parametere olarak eklenir.
   final HomeViewModel viewModel;
 
   @override
@@ -52,42 +52,44 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    widget.viewModel.deleteBooking.addListener(_onResult);
+  //  widget.viewModel.deleteBooking.addListener(_onResult);
   }
 
   @override
   void didUpdateWidget(covariant HomeScreen oldWidget) {
     super.didUpdateWidget(oldWidget);
-    oldWidget.viewModel.deleteBooking.removeListener(_onResult);
-    widget.viewModel.deleteBooking.addListener(_onResult);
+   // oldWidget.viewModel.deleteBooking.removeListener(_onResult);
+    //widget.viewModel.deleteBooking.addListener(_onResult);
   }
 
   @override
   void dispose() {
-    widget.viewModel.deleteBooking.removeListener(_onResult);
+  //  widget.viewModel.deleteBooking.removeListener(_onResult);
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    print("home screen build called");
     return Scaffold(
       appBar: AppBar(
         title: Text("HomeScreen"),
       ),
-      // floatingActionButton: FloatingActionButton.extended(
-      //   // Workaround for https://github.com/flutter/flutter/issues/115358#issuecomment-2117157419
-      //   heroTag: null,
-      //   key: const ValueKey(bookingButtonKey),
-      //   onPressed: () => context.go(Routes.search),
-      //   label: Text(AppLocalization.of(context).bookNewTrip),
-      //   icon: const Icon(Icons.add_location_outlined),
-      // ),
+      floatingActionButton: FloatingActionButton.extended(
+        // Workaround for https://github.com/flutter/flutter/issues/115358#issuecomment-2117157419
+        heroTag: null,
+        key: const ValueKey(bookingButtonKey),
+        onPressed: () => context.go(Routes.search),
+        label: Text(AppLocalization.of(context).bookNewTrip),
+        icon: const Icon(Icons.add_location_outlined),
+      ),
       body: SafeArea(
         top: false,
         bottom: true,
         child: ListenableBuilder(
           listenable: widget.viewModel.load,
           builder: (context, child) {
+            print("home screen listenable builder called  ");
             if (widget.viewModel.load.running) {
               return const Center(
                 child: CircularProgressIndicator(),
@@ -126,6 +128,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       onTap: () => context.push(Routes.bookingWithId(
                           widget.viewModel.bookings[index].id)),
                       confirmDismiss: (_) async {
+                        print("confirm dissmiss called");
                         // wait for command to complete
                         await widget.viewModel.deleteBooking.execute(
                           widget.viewModel.bookings[index].id,
@@ -185,6 +188,7 @@ class _Booking extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    /// Burdaki dismissible widget'i bir booking'i silmek icin kullanilan widget'tir.
     return Dismissible(
       key: ValueKey(booking.id),
       direction: DismissDirection.endToStart,

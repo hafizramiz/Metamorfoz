@@ -6,6 +6,10 @@ import 'package:flutter/material.dart';
 
 import '../themes/colors.dart';
 
+/// Error indicator widget.Butun safyalarda kullanilmasi icin tek bir yerde
+/// core katmaninda yazilmis widgettir.
+
+
 class ErrorIndicator extends StatelessWidget {
   const ErrorIndicator({
     super.key,
