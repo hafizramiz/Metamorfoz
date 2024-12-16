@@ -25,6 +25,7 @@ class AuthApiClient {
   Future<Result<LoginResponse>> login(LoginRequest loginRequest) async {
     final client = _clientFactory();
     try {
+      print("object");
       final request = await client.post(_host, _port, '/login');
       request.write(jsonEncode(loginRequest));
       final response = await request.close();
@@ -40,4 +41,32 @@ class AuthApiClient {
       client.close();
     }
   }
+
+
+
+
+  // Future<Result<LoginResponse>> login(LoginRequest loginRequest) async {
+  //   final client = _clientFactory();
+  //   try {
+  //     print("object");
+  //     final request = await client.post(_host, _port, '/login');
+  //     request.write(jsonEncode(loginRequest));
+  //     final response = await request.close();
+  //     if (response.statusCode == 200) {
+  //       final stringData = await response.transform(utf8.decoder).join();
+  //       return Result.ok(LoginResponse.fromJson(jsonDecode(stringData)));
+  //     } else {
+  //       return const Result.error(HttpException("Login error"));
+  //     }
+  //   } on Exception catch (error) {
+  //     return Result.error(error);
+  //   } finally {
+  //     client.close();
+  //   }
+  // }
+  //
+
+
+
+
 }

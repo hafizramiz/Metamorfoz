@@ -31,10 +31,14 @@ GoRouter router(
 ) =>
     GoRouter(
       initialLocation: Routes.home,
+
+      ///  [debugLogDiagnostics]: true, yaparak routerin calisma durumunu goruntuleyebiliriz
       debugLogDiagnostics: true,
       redirect: _redirect,
       refreshListenable: authRepository,
       routes: [
+        /// Login screen
+
         GoRoute(
           path: Routes.login,
           builder: (context, state) {
@@ -46,6 +50,7 @@ GoRouter router(
           },
         ),
 
+        /// Home screen
         GoRoute(
           path: Routes.home,
 
@@ -60,6 +65,7 @@ GoRouter router(
             return HomeScreen(viewModel: viewModel);
           },
           routes: [
+            /// Nested routes
             GoRoute(
               path: Routes.searchRelative,
               builder: (context, state) {
@@ -152,6 +158,8 @@ GoRouter router(
         ),
       ],
     );
+
+/// Login redirection logic burda yonetilir.
 
 // From https://github.com/flutter/packages/blob/main/packages/go_router/example/lib/redirection.dart
 Future<String?> _redirect(BuildContext context, GoRouterState state) async {

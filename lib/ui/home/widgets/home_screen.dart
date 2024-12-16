@@ -32,7 +32,7 @@ const String bookingButtonKey = 'booking-button';
 
 /// [HomeScreen] render etmek icin viewmodel icindeki state'e ihtiyac duyar.
 /// O view modele erismek icin view'in constructor'ina arguman olarak gecilir.
-class HomeScreen extends StatefulWidget {
+final class HomeScreen extends StatefulWidget {
   const HomeScreen({
     super.key,
     required this.viewModel,

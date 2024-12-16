@@ -13,6 +13,7 @@ import 'main.dart';
 /// Launch with `flutter run --target lib/main_staging.dart`.
 /// Uses remote data from a server.
 void main() {
+  /// Butun seviyedeki loglari goruntulemek icin kullanilir.
   Logger.root.level = Level.ALL;
 
   runApp(
