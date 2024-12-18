@@ -16,19 +16,13 @@ import '../../core/ui/error_indicator.dart';
 import '../view_models/home_viewmodel.dart';
 import 'home_title.dart';
 
-
-
-
 ///[HomeScreen] tek bir view'dir Scaffold'i olan ve view routing yapilan bir view'dir.
 ///Bu view'in bir tane view moddeli vardir. [HomeViewModel]
 /// Eger bir view olsaydi ve bu view birden fazla yerde kullanilacak olsaydi
 /// onu ayrirdik. O zaman onun ayri vir view modeli olurdu
 /// [LogoutButton] gibi. ordaki aciklamayi okuyarak tam anlayabilirsin.
 
-
-
 const String bookingButtonKey = 'booking-button';
-
 
 /// [HomeScreen] render etmek icin viewmodel icindeki state'e ihtiyac duyar.
 /// O view modele erismek icin view'in constructor'ina arguman olarak gecilir.
@@ -45,26 +39,25 @@ final class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-
 /// Artik View model icindeki state'e erisebiliriz.
 
 class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-  //  widget.viewModel.deleteBooking.addListener(_onResult);
+    //  widget.viewModel.deleteBooking.addListener(_onResult);
   }
 
   @override
   void didUpdateWidget(covariant HomeScreen oldWidget) {
     super.didUpdateWidget(oldWidget);
-   // oldWidget.viewModel.deleteBooking.removeListener(_onResult);
+    // oldWidget.viewModel.deleteBooking.removeListener(_onResult);
     //widget.viewModel.deleteBooking.addListener(_onResult);
   }
 
   @override
   void dispose() {
-  //  widget.viewModel.deleteBooking.removeListener(_onResult);
+    //  widget.viewModel.deleteBooking.removeListener(_onResult);
     super.dispose();
   }
 
@@ -72,9 +65,9 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     print("home screen build called");
     return Scaffold(
-      appBar: AppBar(
-        title: Text("HomeScreen"),
-      ),
+      // appBar: AppBar(
+      //   title: Text("HomeScreen"),
+      // ),
       floatingActionButton: FloatingActionButton.extended(
         // Workaround for https://github.com/flutter/flutter/issues/115358#issuecomment-2117157419
         heroTag: null,
@@ -125,8 +118,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     itemBuilder: (_, index) => _Booking(
                       key: ValueKey(widget.viewModel.bookings[index].id),
                       booking: widget.viewModel.bookings[index],
-                      onTap: () => context.push(Routes.bookingWithId(
-                          widget.viewModel.bookings[index].id)),
+                      onTap: () => context.push(
+                        Routes.bookingWithId(
+                            widget.viewModel.bookings[index].id),
+                      ),
                       confirmDismiss: (_) async {
                         print("confirm dissmiss called");
                         // wait for command to complete
