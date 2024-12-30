@@ -56,8 +56,6 @@ dev_dependencies:
 
 
 flutter:
-
-
   uses-material-design: true
 
   assets:
@@ -65,3 +63,5 @@ flutter:
     - assets/destinations.json
     - assets/logo.svg
     - assets/user.jpg
+    - assets/images/
+    - assets/icons/

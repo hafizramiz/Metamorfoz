@@ -8,7 +8,7 @@ import 'package:go_router/go_router.dart';
 import '../../../routing/routes.dart';
 import '../../core/localization/applocalization.dart';
 import '../../core/themes/dimens.dart';
-import '../../core/ui/back_button.dart';
+import '../../core/ui/buttons/back_button.dart';
 import '../../core/ui/home_button.dart';
 
 class ActivitiesHeader extends StatelessWidget {

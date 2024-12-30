@@ -4,6 +4,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
+import 'package:metamorfoz/ui/camera/widgets/camera_screen.dart';
 import 'package:metamorfoz/ui/metamorfoz/metamorfoz_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -30,7 +31,7 @@ GoRouter router(
   AuthRepository authRepository,
 ) =>
     GoRouter(
-      initialLocation: Routes.home,
+      initialLocation: Routes.camera,
 
       ///  [debugLogDiagnostics]: true, yaparak routerin calisma durumunu goruntuleyebiliriz
       debugLogDiagnostics: true,
@@ -154,6 +155,19 @@ GoRouter router(
               userRepository: context.read(),
             );
             return MetamorfozScreen(viewModel: viewModel);
+          },
+        ),
+
+        /// Yeni eklediklerim
+
+        GoRoute(
+          path: Routes.camera,
+          builder: (context, state) {
+            final viewModel = HomeViewModel(
+              bookingRepository: context.read(),
+              userRepository: context.read(),
+            );
+            return CameraScreen();
           },
         ),
       ],

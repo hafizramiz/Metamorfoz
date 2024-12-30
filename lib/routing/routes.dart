@@ -14,6 +14,9 @@ abstract final class Routes {
   static const booking = '/$bookingRelative';
   static const bookingRelative = 'booking';
 
+  /// Yeni eklediklerim
+  static const camera = '/camera';
+
   static String bookingWithId(int id) => '$booking/$id';
 
   /// Yeni eklediklerim

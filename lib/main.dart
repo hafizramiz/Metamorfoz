@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:metamorfoz/ui/camera/widgets/camera_screen.dart';
 import 'package:provider/provider.dart';
 
 import 'ui/core/localization/applocalization.dart';
@@ -24,17 +25,25 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      localizationsDelegates: [
-        GlobalWidgetsLocalizations.delegate,
-        GlobalMaterialLocalizations.delegate,
-        AppLocalizationDelegate(),
-      ],
-      scrollBehavior: AppCustomScrollBehavior(),
-      theme: AppTheme.lightTheme,
-      darkTheme: AppTheme.darkTheme,
-      themeMode: ThemeMode.system,
-      routerConfig: router(context.read()),
+
+
+    return MaterialApp(
+      home: CameraScreen(),
     );
+
+
+
+    // return MaterialApp.router(
+    //   localizationsDelegates: [
+    //     GlobalWidgetsLocalizations.delegate,
+    //     GlobalMaterialLocalizations.delegate,
+    //     AppLocalizationDelegate(),
+    //   ],
+    //   scrollBehavior: AppCustomScrollBehavior(),
+    //   theme: AppTheme.lightTheme,
+    //   darkTheme: AppTheme.darkTheme,
+    //   themeMode: ThemeMode.system,
+    //   routerConfig: router(context.read()),
+    // );
   }
 }

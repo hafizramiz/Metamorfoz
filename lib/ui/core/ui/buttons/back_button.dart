@@ -5,8 +5,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../themes/colors.dart';
-import 'blur_filter.dart';
+import '../../themes/colors.dart';
+import '../blur_filter.dart';
 
 /// Custom back button to pop navigation.
 class CustomBackButton extends StatelessWidget {
