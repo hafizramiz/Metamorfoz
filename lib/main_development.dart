@@ -15,6 +15,7 @@ import 'main.dart';
 void main() {
   Logger.root.level = Level.ALL;
 
+  /// Burda local providerlar agaca eklenir.
   runApp(
     MultiProvider(
       providers: providersLocal,

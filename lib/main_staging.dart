@@ -15,7 +15,7 @@ import 'main.dart';
 void main() {
   /// Butun seviyedeki loglari goruntulemek icin kullanilir.
   Logger.root.level = Level.ALL;
-
+/// Burda Remote providerlar agaca eklenir.
   runApp(
     MultiProvider(
       providers: providersRemote,
