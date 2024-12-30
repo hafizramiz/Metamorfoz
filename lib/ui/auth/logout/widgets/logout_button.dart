@@ -9,7 +9,6 @@ import '../../../core/localization/applocalization.dart';
 import '../../../core/themes/colors.dart';
 import '../view_models/logout_viewmodel.dart';
 
-
 /// View nedir?
 /// View bazen tum ekran olabilir. Kendine ait bir scaffoldu olan altinda da
 /// widget'lari olan. [HomeScreen] gibi
@@ -17,9 +16,21 @@ import '../view_models/logout_viewmodel.dart';
 /// Komple uygulamanin diger alanlarinda kullanilmak uzere kendi icinde fonksiyonlari olan
 /// bir widget olabilir. [LogoutButton] gibi. Bu da bir view'dir.
 /// [LogoutButton] view'nin ayrica bir view model'i [LogoutViewModel] vardir.
+/// Log out sadece bir butondur. ama ayrica bir view modeli var.
 
-
-
+/// [LogoutButton]  bir view model istiyor. Bu widgeti herhangi bir ekrana bagladigimizda
+/// bizden view model talep edecek. Ona view modeli nasil temin edecegiz?
+///
+/// [HomeTitle ] icine eklersek bu sekilde ekleme yapacagiz.
+///   LogoutButton(
+//               viewModel: LogoutViewModel(
+//                 authRepository: context.read(),
+//                 itineraryConfigRepository: context.read(),
+//               ),
+//             ),
+///
+///
+///
 class LogoutButton extends StatefulWidget {
   const LogoutButton({
     super.key,

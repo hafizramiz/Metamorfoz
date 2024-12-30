@@ -56,6 +56,9 @@ class _ResultsScreenState extends State<ResultsScreen> {
       //   if (!didPop) context.go(Routes.search);
       // },
       child: Scaffold(
+        appBar: AppBar(
+          title: Text("Result screen"),
+        ),
         body: ListenableBuilder(
           listenable: widget.viewModel.search,
           builder: (context, child) {

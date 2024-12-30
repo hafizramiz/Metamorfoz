@@ -13,6 +13,10 @@ import '../../../utils/result.dart';
 import '../../services/local/local_data_service.dart';
 import 'booking_repository.dart';
 
+
+/// Local Repository oldugu icin local servis kullanilir.
+/// Remote olsa remote servis kullanilirdi.
+///
 class BookingRepositoryLocal implements BookingRepository {
   BookingRepositoryLocal({
     required LocalDataService localDataService,

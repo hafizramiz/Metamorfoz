@@ -41,7 +41,6 @@ class _BookingScreenState extends State<BookingScreen> {
     return PopScope(
       canPop: false,
 
-
       onPopInvoked: (didPop) {
         // Back navigation always goes to home
         if (!didPop) context.go(Routes.home);
@@ -52,8 +51,10 @@ class _BookingScreenState extends State<BookingScreen> {
       //   if (!didPop) context.go(Routes.home);
       // },
 
-
       child: Scaffold(
+        appBar: AppBar(
+          title: Text("Booking screen"),
+        ),
         floatingActionButton: ListenableBuilder(
           listenable: widget.viewModel,
           builder: (context, _) => FloatingActionButton.extended(
@@ -68,6 +69,7 @@ class _BookingScreenState extends State<BookingScreen> {
           ),
         ),
         body: ListenableBuilder(
+          /// Burda iki farkli view modeli dinlemis oluyoruz.
           // Listen to changes in both commands
           listenable: Listenable.merge([
             widget.viewModel.createBooking,

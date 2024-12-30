@@ -39,6 +39,9 @@ class SearchFormScreen extends StatelessWidget {
       //   if (!didPop) context.go(Routes.home);
       // },
       child: Scaffold(
+        appBar: AppBar(
+          title: Text("Search form screen"),
+        ),
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [

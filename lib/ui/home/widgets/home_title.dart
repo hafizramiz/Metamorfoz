@@ -40,6 +40,9 @@ class HomeHeader extends StatelessWidget {
                 height: Dimens.of(context).profilePictureSize,
               ),
             ),
+
+            /// Burda ayri bir viewmodelden beslenen widgeti baska ekrana nasil enjekte ettigimizin bir ornegi var.
+
             LogoutButton(
               viewModel: LogoutViewModel(
                 authRepository: context.read(),

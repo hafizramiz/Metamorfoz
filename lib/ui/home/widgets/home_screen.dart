@@ -65,9 +65,9 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     print("home screen build called");
     return Scaffold(
-      // appBar: AppBar(
-      //   title: Text("HomeScreen"),
-      // ),
+      appBar: AppBar(
+        title: Text("HomeScreen"),
+      ),
       floatingActionButton: FloatingActionButton.extended(
         // Workaround for https://github.com/flutter/flutter/issues/115358#issuecomment-2117157419
         heroTag: null,
@@ -83,6 +83,10 @@ class _HomeScreenState extends State<HomeScreen> {
           listenable: widget.viewModel.load,
           builder: (context, child) {
             print("home screen listenable builder called  ");
+
+            /// Burdaki load metotu da bir ChangeNotifierProvider'dan extend etmis bir siniftit
+            /// Yani listenable edilebilir bir siniftir.
+            /// Burada load commandi dinlerken asagida deletebooking dinleniyor.
             if (widget.viewModel.load.running) {
               return const Center(
                 child: CircularProgressIndicator(),
@@ -128,6 +132,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         await widget.viewModel.deleteBooking.execute(
                           widget.viewModel.bookings[index].id,
                         );
+                        /// Yukarda load commandi dinlerken burda deletebooking dinleniyor.
                         // if command completed successfully, return true
                         if (widget.viewModel.deleteBooking.completed) {
                           // removes the dismissable from the list
