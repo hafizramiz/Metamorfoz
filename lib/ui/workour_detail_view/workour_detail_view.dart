@@ -1,11 +1,9 @@
-import 'package:fitnessapp/common_widgets/round_gradient_button.dart';
-import 'package:fitnessapp/utils/app_colors.dart';
-import 'package:fitnessapp/view/workour_detail_view/widgets/exercises_set_section.dart';
-import 'package:fitnessapp/view/workour_detail_view/widgets/icon_title_next_row.dart';
-import 'package:fitnessapp/view/workout_schedule_view/workout_schedule_view.dart';
 import 'package:flutter/material.dart';
+import 'package:metamorfoz/ui/workour_detail_view/widgets/exercises_set_section.dart';
+import 'package:metamorfoz/ui/workour_detail_view/widgets/icon_title_next_row.dart';
 
-import '../../common_widgets/round_button.dart';
+import '../core/themes/colors.dart';
+import '../core/ui/buttons/round_gradient_button.dart';
 import 'exercises_stpe_details.dart';
 
 class WorkoutDetailView extends StatefulWidget {
@@ -226,7 +224,7 @@ class _WorkoutDetailViewState extends State<WorkoutDetailView> {
                           time: "5/27, 09:00 AM",
                           color: AppColors.primaryColor2.withOpacity(0.3),
                           onPressed: () {
-                            Navigator.pushNamed(context, WorkoutScheduleView.routeName);
+                           // Navigator.pushNamed(context, WorkoutScheduleView.routeName);
                           }),
                       SizedBox(
                         height: media.width * 0.02,

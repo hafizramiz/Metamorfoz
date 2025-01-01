@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import '../activity/activity_screen.dart';
 import '../camera/widgets/camera_screen.dart';
 import '../core/themes/colors.dart';
-import '../home/widgets/home_screen.dart';
+import '../home/home_screen.dart';
 import '../profile/user_profile.dart';
 
 

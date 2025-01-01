@@ -1,10 +1,11 @@
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:fitnessapp/utils/app_colors.dart';
-import 'package:fitnessapp/view/login/login_screen.dart';
-import 'package:fitnessapp/view/welcome/welcome_screen.dart';
 import 'package:flutter/material.dart';
 
-import '../../common_widgets/round_gradient_button.dart';
+import '../core/themes/colors.dart';
+
+import '../core/ui/buttons/round_gradient_button.dart';
+import '../welcome/welcome_screen.dart';
+
 
 class YourGoalScreen extends StatefulWidget {
   static String routeName = "/YourGoalScreen";

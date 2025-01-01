@@ -1,10 +1,11 @@
 import 'package:animated_toggle_switch/animated_toggle_switch.dart';
-import 'package:fitnessapp/utils/app_colors.dart';
-import 'package:fitnessapp/view/profile/widgets/setting_row.dart';
-import 'package:fitnessapp/view/profile/widgets/title_subtitle_cell.dart';
 import 'package:flutter/material.dart';
+import 'package:metamorfoz/ui/profile/widgets/setting_row.dart';
+import 'package:metamorfoz/ui/profile/widgets/title_subtitle_cell.dart';
 
-import '../../common_widgets/round_button.dart';
+import '../core/themes/colors.dart';
+import '../core/ui/buttons/round_button.dart';
+
 
 class UserProfile extends StatefulWidget {
   const UserProfile({Key? key}) : super(key: key);
@@ -250,7 +251,7 @@ class _UserProfileState extends State<UserProfile> {
                             CustomAnimatedToggleSwitch<bool>(
                               current: positive,
                               values: [false, true],
-                              dif: 0.0,
+                              //dif: 0.0,
                               indicatorSize: Size.square(30.0),
                               animationDuration:
                               const Duration(milliseconds: 200),
@@ -259,8 +260,8 @@ class _UserProfileState extends State<UserProfile> {
                               iconBuilder: (context, local, global) {
                                 return const SizedBox();
                               },
-                              defaultCursor: SystemMouseCursors.click,
-                              onTap: () => setState(() => positive = !positive),
+                              // defaultCursor: SystemMouseCursors.click,
+                              // onTap: () => setState(() => positive = !positive),
                               iconsTappable: false,
                               wrapperBuilder: (context, global, child) {
                                 return Stack(

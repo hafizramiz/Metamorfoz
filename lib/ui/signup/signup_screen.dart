@@ -1,8 +1,8 @@
-import 'package:fitnessapp/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 
-import '../../common_widgets/round_gradient_button.dart';
-import '../../common_widgets/round_textfield.dart';
+import '../core/themes/colors.dart';
+import '../core/ui/buttons/round_gradient_button.dart';
+import '../core/ui/buttons/round_textfield.dart';
 import '../profile/complete_profile_screen.dart';
 
 class SignupScreen extends StatefulWidget {

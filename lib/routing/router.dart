@@ -5,7 +5,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 import 'package:metamorfoz/ui/camera/widgets/camera_screen.dart';
-import 'package:metamorfoz/ui/metamorfoz/metamorfoz_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../data/repositories/auth/auth_repository.dart';
@@ -15,8 +14,6 @@ import '../ui/auth/login/view_models/login_viewmodel.dart';
 import '../ui/auth/login/widgets/login_screen.dart';
 import '../ui/booking/widgets/booking_screen.dart';
 import '../ui/booking/view_models/booking_viewmodel.dart';
-import '../ui/home/view_models/home_viewmodel.dart';
-import '../ui/home/widgets/home_screen.dart';
 import '../ui/results/view_models/results_viewmodel.dart';
 import '../ui/results/widgets/results_screen.dart';
 import '../ui/search_form/view_models/search_form_viewmodel.dart';
@@ -52,124 +49,100 @@ GoRouter router(
         ),
 
         /// Home screen
-        GoRoute(
-          path: Routes.home,
-
-          /// Burda page builder yerine builder'da kullanilabilir. Tek farki
-          /// pageBuilder ile platform spesficik bir safya gecisi yapilabilir
-
-          builder: (context, state) {
-            final viewModel = HomeViewModel(
-              bookingRepository: context.read(),
-              userRepository: context.read(),
-            );
-            return HomeScreen(viewModel: viewModel);
-          },
-          routes: [
-            /// Nested routes
-            GoRoute(
-              path: Routes.searchRelative,
-              builder: (context, state) {
-                final viewModel = SearchFormViewModel(
-                  continentRepository: context.read(),
-                  itineraryConfigRepository: context.read(),
-                );
-                return SearchFormScreen(viewModel: viewModel);
-              },
-            ),
-            GoRoute(
-              path: Routes.resultsRelative,
-              builder: (context, state) {
-                final viewModel = ResultsViewModel(
-                  destinationRepository: context.read(),
-                  itineraryConfigRepository: context.read(),
-                );
-                return ResultsScreen(
-                  viewModel: viewModel,
-                );
-              },
-            ),
-            GoRoute(
-              path: Routes.activitiesRelative,
-              builder: (context, state) {
-                final viewModel = ActivitiesViewModel(
-                  activityRepository: context.read(),
-                  itineraryConfigRepository: context.read(),
-                );
-                return ActivitiesScreen(
-                  viewModel: viewModel,
-                );
-              },
-            ),
-            GoRoute(
-              path: Routes.bookingRelative,
-              builder: (context, state) {
-                final viewModel = BookingViewModel(
-                  itineraryConfigRepository: context.read(),
-                  createBookingUseCase: context.read(),
-                  shareBookingUseCase: context.read(),
-                  bookingRepository: context.read(),
-                );
-
-                // When opening the booking screen directly
-                // create a new booking from the stored ItineraryConfig.
-                viewModel.createBooking.execute();
-
-                return BookingScreen(
-                  viewModel: viewModel,
-                );
-              },
-              routes: [
-                GoRoute(
-                  path: ':id',
-                  builder: (context, state) {
-                    final id = int.parse(state.pathParameters['id']!);
-                    final viewModel = BookingViewModel(
-                      itineraryConfigRepository: context.read(),
-                      createBookingUseCase: context.read(),
-                      shareBookingUseCase: context.read(),
-                      bookingRepository: context.read(),
-                    );
-
-                    // When opening the booking screen with an existing id
-                    // load and display that booking.
-                    viewModel.loadBooking.execute(id);
-
-                    return BookingScreen(
-                      viewModel: viewModel,
-                    );
-                  },
-                ),
-              ],
-            ),
-          ],
-        ),
-
-        /// Yeni eklediklerim
-
-        GoRoute(
-          path: Routes.metamorfoz,
-          builder: (context, state) {
-            final viewModel = HomeViewModel(
-              bookingRepository: context.read(),
-              userRepository: context.read(),
-            );
-            return MetamorfozScreen(viewModel: viewModel);
-          },
-        ),
+        // GoRoute(
+        //   path: Routes.home,
+        //
+        //   /// Burda page builder yerine builder'da kullanilabilir. Tek farki
+        //   /// pageBuilder ile platform spesficik bir safya gecisi yapilabilir
+        //
+        //   builder: (context, state) {
+        //     final viewModel = HomeViewModel(
+        //       bookingRepository: context.read(),
+        //       userRepository: context.read(),
+        //     );
+        //     return HomeScreen(viewModel: viewModel);
+        //   },
+        //   routes: [
+        //     /// Nested routes
+        //     GoRoute(
+        //       path: Routes.searchRelative,
+        //       builder: (context, state) {
+        //         final viewModel = SearchFormViewModel(
+        //           continentRepository: context.read(),
+        //           itineraryConfigRepository: context.read(),
+        //         );
+        //         return SearchFormScreen(viewModel: viewModel);
+        //       },
+        //     ),
+        //     GoRoute(
+        //       path: Routes.resultsRelative,
+        //       builder: (context, state) {
+        //         final viewModel = ResultsViewModel(
+        //           destinationRepository: context.read(),
+        //           itineraryConfigRepository: context.read(),
+        //         );
+        //         return ResultsScreen(
+        //           viewModel: viewModel,
+        //         );
+        //       },
+        //     ),
+        //     GoRoute(
+        //       path: Routes.activitiesRelative,
+        //       builder: (context, state) {
+        //         final viewModel = ActivitiesViewModel(
+        //           activityRepository: context.read(),
+        //           itineraryConfigRepository: context.read(),
+        //         );
+        //         return ActivitiesScreen(
+        //           viewModel: viewModel,
+        //         );
+        //       },
+        //     ),
+        //     GoRoute(
+        //       path: Routes.bookingRelative,
+        //       builder: (context, state) {
+        //         final viewModel = BookingViewModel(
+        //           itineraryConfigRepository: context.read(),
+        //           createBookingUseCase: context.read(),
+        //           shareBookingUseCase: context.read(),
+        //           bookingRepository: context.read(),
+        //         );
+        //
+        //         // When opening the booking screen directly
+        //         // create a new booking from the stored ItineraryConfig.
+        //         viewModel.createBooking.execute();
+        //
+        //         return BookingScreen(
+        //           viewModel: viewModel,
+        //         );
+        //       },
+        //       routes: [
+        //         GoRoute(
+        //           path: ':id',
+        //           builder: (context, state) {
+        //             final id = int.parse(state.pathParameters['id']!);
+        //             final viewModel = BookingViewModel(
+        //               itineraryConfigRepository: context.read(),
+        //               createBookingUseCase: context.read(),
+        //               shareBookingUseCase: context.read(),
+        //               bookingRepository: context.read(),
+        //             );
+        //
+        //             // When opening the booking screen with an existing id
+        //             // load and display that booking.
+        //             viewModel.loadBooking.execute(id);
+        //
+        //             return BookingScreen(
+        //               viewModel: viewModel,
+        //             );
+        //           },
+        //         ),
+        //       ],
+        //     ),
+        //   ],
+        // ),
 
         /// Yeni eklediklerim
-
-        GoRoute(
-          path: Routes.camera,
-          builder: (context, state) {
-            final viewModel = HomeViewModel(
-              bookingRepository: context.read(),
-              userRepository: context.read(),
-            );
-            return CameraScreen();
-          },
-        ),
       ],
     );
 

@@ -1,6 +1,7 @@
 import 'package:dotted_dashed_line/dotted_dashed_line.dart';
-import 'package:fitnessapp/utils/app_colors.dart';
 import 'package:flutter/material.dart';
+
+import '../../core/themes/colors.dart';
 
 class StepDetailRow extends StatelessWidget {
   final Map sObj;

@@ -1,9 +1,10 @@
-import 'package:fitnessapp/common_widgets/round_gradient_button.dart';
-import 'package:fitnessapp/utils/app_colors.dart';
-import 'package:fitnessapp/view/workour_detail_view/widgets/step_detail_row.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:metamorfoz/ui/workour_detail_view/widgets/step_detail_row.dart';
 import 'package:readmore/readmore.dart';
+
+import '../core/themes/colors.dart';
+import '../core/ui/buttons/round_gradient_button.dart';
 
 class ExercisesStepDetails extends StatefulWidget {
   final Map eObj;

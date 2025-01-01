@@ -1,10 +1,9 @@
-import 'package:fitnessapp/common_widgets/round_gradient_button.dart';
-import 'package:fitnessapp/utils/app_colors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../../common_widgets/round_button.dart';
 import '../../utils/common.dart';
+import '../core/themes/colors.dart';
+import '../core/ui/buttons/round_gradient_button.dart';
 import '../workour_detail_view/widgets/icon_title_next_row.dart';
 
 class AddScheduleView extends StatefulWidget {

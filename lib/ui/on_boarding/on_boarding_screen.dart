@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:metamorfoz/ui/on_boarding/widgets/pager_widget.dart';
 
 import '../core/themes/colors.dart';
 import '../signup/signup_screen.dart';

@@ -45,9 +45,10 @@ dependencies:
   dotted_dashed_line: ^0.0.3
   flutter_native_splash: ^2.3.11
   readmore: ^3.0.0
-  carousel_slider: ^5.0.0
+  carousel_slider: ^4.2.1
   fl_chart: ^0.69.2
   simple_animation_progress_bar: ^1.8.2
+  calendar_agenda:
 
 dev_dependencies:
 

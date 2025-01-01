@@ -1,8 +1,8 @@
-import 'package:fitnessapp/utils/app_colors.dart';
-import 'package:fitnessapp/view/dashboard/dashboard_screen.dart';
 import 'package:flutter/material.dart';
 
-import '../../common_widgets/round_gradient_button.dart';
+import '../core/themes/colors.dart';
+import '../core/ui/buttons/round_gradient_button.dart';
+import '../dashboard/dashboard_screen.dart';
 
 class WelcomeScreen extends StatelessWidget {
   static String routeName = "/WelcomeScreen";

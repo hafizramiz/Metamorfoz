@@ -1,6 +1,7 @@
-import 'package:fitnessapp/utils/app_colors.dart';
-import 'package:fitnessapp/view/workour_detail_view/widgets/exercises_row.dart';
 import 'package:flutter/material.dart';
+
+import '../../core/themes/colors.dart';
+import 'exercises_row.dart';
 
 class ExercisesSetSection extends StatelessWidget {
   final Map sObj;
