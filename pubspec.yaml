@@ -48,7 +48,6 @@ dependencies:
   carousel_slider: ^4.2.1
   fl_chart: ^0.69.2
   simple_animation_progress_bar: ^1.8.2
-  calendar_agenda:
 
 dev_dependencies:
 

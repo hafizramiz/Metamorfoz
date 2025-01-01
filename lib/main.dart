@@ -3,7 +3,19 @@
 // found in the LICENSE file.
 
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:metamorfoz/ui/activity/activity_screen.dart';
+import 'package:metamorfoz/ui/activity_tracker/activity_tracker_screen.dart';
+import 'package:metamorfoz/ui/auth/login/widgets/login_screen.dart';
 import 'package:metamorfoz/ui/camera/widgets/camera_screen.dart';
+import 'package:metamorfoz/ui/dashboard/dashboard_screen.dart';
+import 'package:metamorfoz/ui/finish_workout/finish_workout_screen.dart';
+import 'package:metamorfoz/ui/notification/notification_screen.dart';
+import 'package:metamorfoz/ui/on_boarding/on_boarding_screen.dart';
+import 'package:metamorfoz/ui/on_boarding/start_screen.dart';
+import 'package:metamorfoz/ui/profile/complete_profile_screen.dart';
+import 'package:metamorfoz/ui/signup/signup_screen.dart';
+import 'package:metamorfoz/ui/welcome/welcome_screen.dart';
+import 'package:metamorfoz/ui/your_goal/your_goal_screen.dart';
 import 'package:provider/provider.dart';
 
 import 'ui/core/localization/applocalization.dart';
@@ -28,7 +40,8 @@ class MainApp extends StatelessWidget {
 
 
     return MaterialApp(
-      home: CameraScreen(),
+      routes: routes,
+      home: DashboardScreen(),
     );
 
 
@@ -47,3 +60,19 @@ class MainApp extends StatelessWidget {
     // );
   }
 }
+
+
+final Map<String, WidgetBuilder> routes = {
+  OnBoardingScreen.routeName: (context) => const OnBoardingScreen(),
+ // LoginScreen.routeName: (context) => const LoginScreen(),
+  StartScreen.routeName: (context) => const StartScreen(),
+  SignupScreen.routeName: (context) => const SignupScreen(),
+  CompleteProfileScreen.routeName: (context) => const CompleteProfileScreen(),
+  YourGoalScreen.routeName: (context) => const YourGoalScreen(),
+  WelcomeScreen.routeName: (context) => const WelcomeScreen(),
+  DashboardScreen.routeName: (context) => const DashboardScreen(),
+  FinishWorkoutScreen.routeName: (context) => const FinishWorkoutScreen(),
+  NotificationScreen.routeName: (context) => const NotificationScreen(),
+  ActivityTrackerScreen.routeName: (context) => const ActivityTrackerScreen(),
+ // WorkoutScheduleView.routeName: (context) => const WorkoutScheduleView(),
+};
