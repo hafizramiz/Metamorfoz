@@ -134,6 +134,7 @@ GoRouter router(
                     // load and display that booking.
                     viewModel.loadBooking.execute(id);
 
+                    /// Ekranin burda id'yi almasina gerek yok. Direk vide modele id veriyoruz,
                     return BookingScreen(
                       viewModel: viewModel,
                     );
