@@ -1,7 +1,6 @@
 // Copyright 2024 The Flutter team. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
-
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 import 'package:metamorfoz/ui/metamorfoz/metamorfoz_screen.dart';
@@ -21,14 +20,15 @@ import '../ui/results/widgets/results_screen.dart';
 import '../ui/search_form/view_models/search_form_viewmodel.dart';
 import '../ui/search_form/widgets/search_form_screen.dart';
 import 'routes.dart';
+int counter=0;
 
 /// Top go_router entry point.
 ///
 /// Listens to changes in [AuthTokenRepository] to redirect the user
 /// to /login when the user logs out.
 GoRouter router(
-  AuthRepository authRepository,
-) =>
+    AuthRepository authRepository,
+    ) =>
     GoRouter(
       initialLocation: Routes.home,
 
@@ -161,11 +161,30 @@ GoRouter router(
     );
 
 /// Login redirection logic burda yonetilir.
+/// redirect iki defa calisiyor
+///  @override
+//   Future<bool> get isAuthenticated async {
+//     print("isAuthenticated: $_isAuthenticated ");
+//     // Status is cached
+//     if (_isAuthenticated != null) {
+//       return _isAuthenticated!;
+//     }
+//     // No status cached, fetch from storage
+//     await _fetch();
+//     return _isAuthenticated ?? false;
+//   }
+/// Ilk acilista redirection 4 defa cagriliyor. Bu durumu engellemek icin
 
+
+/// Bunun boyle yazilmasinin sebebi bir daha fetch metotunun calistirilmasini engellemektir.
 // From https://github.com/flutter/packages/blob/main/packages/go_router/example/lib/redirection.dart
 Future<String?> _redirect(BuildContext context, GoRouterState state) async {
+  counter++;
+  print(state);
+  print("redirection called times: $counter");
   // if the user is not logged in, they need to login
   final bool loggedIn = await context.read<AuthRepository>().isAuthenticated;
+  print(loggedIn);
   final bool loggingIn = state.matchedLocation == Routes.login;
   if (!loggedIn) {
     return Routes.login;
