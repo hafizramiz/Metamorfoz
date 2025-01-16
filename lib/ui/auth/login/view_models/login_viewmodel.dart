@@ -12,13 +12,13 @@ class LoginViewModel {
   LoginViewModel({
     required AuthRepository authRepository,
   }) : _authRepository = authRepository {
-    login = Command1<void, (String email, String password)>(_login);
+    login = Command1(_login);
   }
 
   final AuthRepository _authRepository;
   final _log = Logger('LoginViewModel');
 
-  late Command1 login;
+  late Command1<void, (String email, String password)> login;
 
   Future<Result<void>> _login((String, String) credentials) async {
     final (email, password) = credentials;

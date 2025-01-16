@@ -12,6 +12,8 @@ import '../../../utils/command.dart';
 import '../../../utils/result.dart';
 import 'package:flutter/cupertino.dart';
 
+/// Burda iki farkli repository'den gelen veriyle islemek var. Her veri kaynagi icin
+/// farkli bir repository olusturulmalidir.
 /// Results screen view model
 /// Based on https://docs.flutter.dev/get-started/fwe/state-management#using-mvvm-for-your-applications-architecture
 class ResultsViewModel extends ChangeNotifier {

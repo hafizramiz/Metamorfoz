@@ -33,6 +33,26 @@ class HomeViewModel extends ChangeNotifier {
     required UserRepository userRepository,
   })  : _bookingRepository = bookingRepository,
         _userRepository = userRepository {
+
+    /// Burda Command ChangeNotifier sinifindan extend almis baska bir siniftir,
+    /// Basitce ornegi boyledir.Command constractorunda bir class parametersei almasi
+    /// zorunlu kilar. Buda variable degil de bir actiondir. Yani bir fonksiyon.
+    /// Aldigi fonksiyonu bir String deger aliyor gibi de dusunebiliriz.
+    /// execute classin metotudur. action paramaterdir. Ama execute bir class metotudur.
+    /// Bunu aldiktan sonra Nasil ki Changenotifieri bir widget agacinda enjekte ederken
+    /// ChangeNotifierProvider ile enjekte edip sonra ..init yapip metotdu cagiriyorsak bunu da
+    /// ayni sekilde yapabiliriz.
+    /// load = Command0(_load)..execute(); Burda yapilan da odur. Aksiyonu ver. Daha sonra execute et
+    /// Parametre olarak verdigimiz Ilgili aksiyon execute icinde cagrilir.
+    /// class Command extends ChangeNotifier {
+    //   Command(this._action);
+    // void Function() _action;
+    //
+    // void execute() {
+    //   // run _action
+    // }
+    //   }
+
     load = Command0(_load)..execute();
     deleteBooking = Command1(_deleteBooking);
   }
@@ -58,6 +78,9 @@ class HomeViewModel extends ChangeNotifier {
 
   /// [_load] methodu ile veriler cekilir.
   /// Bu metot repository katmanina gider ordaki metotu calistirir.
+  /// Bu bir metotdur. Bu metot ne donerse Command pattern icinde
+  /// bunu elde edecegiz.
+  /// _result = await action(); bu satirda action calistirilir.
   Future<Result> _load() async {
     _log.fine('_load started');
 
@@ -67,7 +90,10 @@ class HomeViewModel extends ChangeNotifier {
     _log.warning("warning");
 
     try {
+      /// View model Reposirotry katmanina baglanir.
+      /// Repository katmani da service cikar ve verileri getirir.
       final result = await _bookingRepository.getBookingsList();
+      /// Donen sonuca gore islem yapilir.
       switch (result) {
         case Ok<List<BookingSummary>>():
           _bookings = result.value;

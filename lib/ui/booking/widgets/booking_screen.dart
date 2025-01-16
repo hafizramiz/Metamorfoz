@@ -68,6 +68,7 @@ class _BookingScreenState extends State<BookingScreen> {
           ),
         ),
         body: ListenableBuilder(
+          /// Burda iki farkli komuttaki degisiklikleri dinliyoruz
           // Listen to changes in both commands
           listenable: Listenable.merge([
             widget.viewModel.createBooking,

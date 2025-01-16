@@ -56,6 +56,9 @@ class ApiClient {
         return const Result.error(HttpException("Invalid response"));
       }
     } on Exception catch (error) {
+
+      /// Burda da benim dio service manager'da yaptigim gibi yapilmis. Hata firlatmiyor.
+      /// Yine ayni modeli donuyor. Sadece error ile donuyor.
       return Result.error(error);
     } finally {
       client.close();
