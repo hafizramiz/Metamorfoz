@@ -72,7 +72,7 @@ class AuthRepositoryRemote extends AuthRepository {
 
   @override
   Future<bool> get isAuthenticated async {
-    await Future.delayed(Duration(seconds: 3));
+   // await Future.delayed(Duration(seconds: 3));
     print("isAuthenticated: $_isAuthenticated ");
     // Status is cached
     if (_isAuthenticated != null) {
