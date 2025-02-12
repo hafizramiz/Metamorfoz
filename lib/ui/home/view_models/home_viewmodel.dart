@@ -82,7 +82,7 @@ class HomeViewModel extends ChangeNotifier {
   /// bunu elde edecegiz.
   /// _result = await action(); bu satirda action calistirilir.
   Future<Result> _load() async {
-    _log.fine('_load started');
+    _log.fine('home _load started');
 
     /// Fine leveldaki loglama icin kullanilir.
     _log.config("config");

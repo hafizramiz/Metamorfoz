@@ -26,6 +26,7 @@ const String bookingButtonKey = 'booking-button';
 
 /// [HomeScreen] render etmek icin viewmodel icindeki state'e ihtiyac duyar.
 /// O view modele erismek icin view'in constructor'ina arguman olarak gecilir.
+/// Home'dan searchRelative'e nasil gidiyor?
 final class HomeScreen extends StatefulWidget {
   const HomeScreen({
     super.key,
@@ -72,6 +73,8 @@ class _HomeScreenState extends State<HomeScreen> {
         // Workaround for https://github.com/flutter/flutter/issues/115358#issuecomment-2117157419
         heroTag: null,
         key: const ValueKey(bookingButtonKey),
+        /// Context. go ile nested route'a gidiyorsun.
+        /// Bakalim parent route'daki ekran bir da rebuild olacak mi?
         onPressed: () => context.go(Routes.search),
         label: Text(AppLocalization.of(context).bookNewTrip),
         icon: const Icon(Icons.add_location_outlined),

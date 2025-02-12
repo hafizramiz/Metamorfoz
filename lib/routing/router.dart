@@ -20,7 +20,8 @@ import '../ui/results/widgets/results_screen.dart';
 import '../ui/search_form/view_models/search_form_viewmodel.dart';
 import '../ui/search_form/widgets/search_form_screen.dart';
 import 'routes.dart';
-int counter=0;
+
+int counter = 0;
 
 /// Top go_router entry point.
 ///
@@ -57,7 +58,13 @@ GoRouter router(
           /// Burda page builder yerine builder'da kullanilabilir. Tek farki
           /// pageBuilder ile platform spesficik bir safya gecisi yapilabilir
 
+          /// Nested route'a giderken ana route'daki metotlar da calisiyor.
+          /// Orasini da yeniden rebuild ediyor.
+          /// Giderken rebuild ediyor. Peki geri gelirken ne yapiyor.
+          /// Geri gelirken de yeniden calistiriyor.
+
           builder: (context, state) {
+            print("home screen invoked! Home screen parent route'dur.");
             final viewModel = HomeViewModel(
               bookingRepository: context.read(),
               userRepository: context.read(),
@@ -67,15 +74,32 @@ GoRouter router(
           routes: [
             /// Nested routes
             GoRoute(
-              path: Routes.searchRelative,
-              builder: (context, state) {
-                final viewModel = SearchFormViewModel(
-                  continentRepository: context.read(),
-                  itineraryConfigRepository: context.read(),
-                );
-                return SearchFormScreen(viewModel: viewModel);
-              },
-            ),
+                path: Routes.searchRelative,
+                builder: (context, state) {
+                  print(
+                      "Search screen invoked! Search screen nested route'dur.");
+
+                  final viewModel = SearchFormViewModel(
+                    continentRepository: context.read(),
+                    itineraryConfigRepository: context.read(),
+                  );
+                  return SearchFormScreen(viewModel: viewModel);
+                },
+                routes: [
+                  GoRoute(
+                    path: Routes.resultsRelative,
+                    builder: (context, state) {
+                      print(
+                          "Search screen invoked! Search screen nested route'dur.");
+
+                      final viewModel = SearchFormViewModel(
+                        continentRepository: context.read(),
+                        itineraryConfigRepository: context.read(),
+                      );
+                      return SearchFormScreen(viewModel: viewModel);
+                    },
+                  )
+                ]),
             GoRoute(
               path: Routes.resultsRelative,
               builder: (context, state) {
@@ -119,6 +143,10 @@ GoRouter router(
                 );
               },
               routes: [
+                /// Burda path'ni degistirip ayni sayfayi bir daha aciyor.
+                /// Sayfa ayni ama path degisti. Ayni sayfasi nested route olarak acti.
+                /// Bu sayfada back deyince de bir oncekine yani kendine degil de daha oncesine
+                /// home'a atiyor.
                 GoRoute(
                   path: ':id',
                   builder: (context, state) {
@@ -130,6 +158,9 @@ GoRouter router(
                       bookingRepository: context.read(),
                     );
 
+                    /// Burda mesela view model'e id aktarmamis
+                    /// burda farkli id'ye gore execute yapip yapmaycagimiza karar veririz.
+                    /// Ynai boyama ise 222 o zaman execute etme. Ama diger durumlarda et deriz.
                     // When opening the booking screen with an existing id
                     // load and display that booking.
                     viewModel.loadBooking.execute(id);
@@ -174,7 +205,6 @@ GoRouter router(
 //     return _isAuthenticated ?? false;
 //   }
 /// Ilk acilista redirection 4 defa cagriliyor. Bu durumu engellemek icin
-
 
 /// Bunun boyle yazilmasinin sebebi bir daha fetch metotunun calistirilmasini engellemektir.
 // From https://github.com/flutter/packages/blob/main/packages/go_router/example/lib/redirection.dart

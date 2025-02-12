@@ -19,6 +19,9 @@ class BookingBody extends StatelessWidget {
 
   final BookingViewModel viewModel;
 
+  /// Burda bir dhaa listenable ile dinlemis
+  /// Bu su demek oluyor. Istemezsen yeniden rebuild yapmasin
+  /// Rebuild'i en tepeye baglamadi yani
   @override
   Widget build(BuildContext context) {
     return ListenableBuilder(
