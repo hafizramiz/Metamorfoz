@@ -7,6 +7,11 @@ import '../../../../data/repositories/itinerary_config/itinerary_config_reposito
 import '../../../../domain/models/itinerary_config/itinerary_config.dart';
 import '../../../../utils/command.dart';
 import '../../../../utils/result.dart';
+//abstract class AuthRepository extends ChangeNotifier {}
+// class AuthRepositoryRemote extends AuthRepository
+/// Burda  AuthRepository bir Question
+
+
 
 class LogoutViewModel {
   LogoutViewModel({

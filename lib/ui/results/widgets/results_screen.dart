@@ -47,6 +47,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print("ResultsScreen - build");
     return PopScope(
       canPop: false,
       onPopInvoked: (didPop) {
@@ -64,6 +65,10 @@ class _ResultsScreenState extends State<ResultsScreen> {
             }
             return Column(
               children: [
+                /// Burdaki app search bar benim uygulamamada soru tipidir
+                /// Ben yukardaki widgeti buraya parametere olarak gecebilirim
+                ///
+
                 _AppSearchBar(widget: widget),
                 if (widget.viewModel.search.running)
                   const Expanded(
@@ -119,6 +124,9 @@ class _ResultsScreenState extends State<ResultsScreen> {
     }
   }
 }
+
+/// Bu kullanim aklimda bulunsun. Direk widgeti asagidaki widget'a gecme gibi
+/// bir secenek olabilirmis demek ki
 
 class _AppSearchBar extends StatelessWidget {
   const _AppSearchBar({

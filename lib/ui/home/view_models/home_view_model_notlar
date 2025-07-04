@@ -1,0 +1,1312 @@
+Merhaba seninle bir konuda dusunmek istiyorum. SImdi flutter ile nasil bir mimari olusturmus oldugumu anladin sanirsam.
+
+
+Merhaba! Evet, daha önceki konuşmalarımızdan Flutter ile ilgili mimari yaklaşımını az çok anladım. 😊 Ancak, tam olarak neyi tartışmak istediğini biraz daha detaylandırırsan, daha iyi bir fikir alışverişi yapabiliriz. Örneğin:
+
+Mevcut mimarini (örneğin, BLoC, Provider, Riverpod, Clean Architecture vs.) optimize etmek mi istiyorsun?
+Belirli bir sorunu çözmek için mimari bir öneri mi arıyorsun?
+Ya da yeni bir proje için sıfırdan bir mimari mi kurgulamak istiyorsun?
+Şu anki mimarinden bahsederek ya da spesifik bir konuya odaklanarak devam edebiliriz. Ne düşünüyorsun?
+
+
+
+
+
+
+
+Mevcut mimaride provider kullaniyorum.
+Mevcut mimariye ornek olsun diye sana Ui katmaninda yerlesen view ve view model paylasiyorum
+// Copyright 2024 The Flutter team. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:metamorfoz/ui/auth/logout/widgets/logout_button.dart';
+
+import '../../../domain/models/booking/booking_summary.dart';
+import '../../../routing/routes.dart';
+import '../../core/localization/applocalization.dart';
+import '../../core/themes/colors.dart';
+import '../../core/themes/dimens.dart';
+import '../../core/ui/date_format_start_end.dart';
+import '../../core/ui/error_indicator.dart';
+import '../view_models/home_viewmodel.dart';
+import 'home_title.dart';
+
+///[HomeScreen] tek bir view'dir Scaffold'i olan ve view routing yapilan bir view'dir.
+///Bu view'in bir tane view moddeli vardir. [HomeViewModel]
+/// Eger bir view olsaydi ve bu view birden fazla yerde kullanilacak olsaydi
+/// onu ayrirdik. O zaman onun ayri vir view modeli olurdu
+/// [LogoutButton] gibi. ordaki aciklamayi okuyarak tam anlayabilirsin.
+
+const String bookingButtonKey = 'booking-button';
+
+// ValuNotifier<bool> testNotifier = ValueNotifier(false);
+
+
+
+/// [HomeScreen] render etmek icin viewmodel icindeki state'e ihtiyac duyar.
+/// O view modele erismek icin view'in constructor'ina arguman olarak gecilir.
+/// Home'dan searchRelative'e nasil gidiyor?
+final class HomeScreen extends StatefulWidget {
+  const HomeScreen({
+    super.key,
+    required this.viewModel,
+  });
+
+  /// final parametere olarak eklenir.
+  final HomeViewModel viewModel;
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+/// Artik View model icindeki state'e erisebiliriz.
+
+class _HomeScreenState extends State<HomeScreen> {
+  @override
+  void initState() {
+    super.initState();
+      widget.viewModel.deleteBooking.addListener(_onResult);
+  }
+
+  @override
+  void didUpdateWidget(covariant HomeScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+     oldWidget.viewModel.deleteBooking.removeListener(_onResult);
+    widget.viewModel.deleteBooking.addListener(_onResult);
+  }
+
+  @override
+  void dispose() {
+      widget.viewModel.deleteBooking.removeListener(_onResult);
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    print("home screen build called");
+    return Scaffold(
+      // appBar: AppBar(
+      //   title: Text("HomeScreen"),
+      // ),
+      floatingActionButton: FloatingActionButton.extended(
+        // Workaround for https://github.com/flutter/flutter/issues/115358#issuecomment-2117157419
+        heroTag: null,
+        key: const ValueKey(bookingButtonKey),
+        /// Context. go ile nested route'a gidiyorsun.
+        /// Bakalim parent route'daki ekran bir da rebuild olacak mi?
+        onPressed: () => context.go(Routes.search),
+        label: Text(AppLocalization.of(context).bookNewTrip),
+        icon: const Icon(Icons.add_location_outlined),
+      ),
+      body: SafeArea(
+        top: false,
+        bottom: true,
+        child: ListenableBuilder(
+            listenable: widget.viewModel.load,
+          builder: (context, child) {
+            print("home screen listenable builder called  ");
+            if (widget.viewModel.load.running) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+
+            if (widget.viewModel.load.error) {
+              return ErrorIndicator(
+                title: AppLocalization.of(context).errorWhileLoadingHome,
+                label: AppLocalization.of(context).tryAgain,
+                onPressed: widget.viewModel.load.execute,
+              );
+            }
+
+            return child!;
+          },
+          child: ListenableBuilder(
+            listenable: widget.viewModel,
+            builder: (context, _) {
+              return CustomScrollView(
+                slivers: [
+                  SliverToBoxAdapter(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                        vertical: Dimens.of(context).paddingScreenVertical,
+                        horizontal: Dimens.of(context).paddingScreenHorizontal,
+                      ),
+                      child: HomeHeader(viewModel: widget.viewModel),
+                    ),
+                  ),
+                  SliverList.builder(
+                    itemCount: widget.viewModel.bookings.length,
+                    itemBuilder: (_, index) => _Booking(
+                      key: ValueKey(widget.viewModel.bookings[index].id),
+                      booking: widget.viewModel.bookings[index],
+                      onTap: () => context.push(
+                        Routes.bookingWithId(
+                            widget.viewModel.bookings[index].id),
+                      ),
+                      confirmDismiss: (_) async {
+                        print("confirm dissmiss called");
+                        // wait for command to complete
+                        await widget.viewModel.deleteBooking.execute(
+                          widget.viewModel.bookings[index].id,
+                        );
+                        // if command completed successfully, return true
+                        if (widget.viewModel.deleteBooking.completed) {
+                          // removes the dismissable from the list
+                          return true;
+                        } else {
+                          // the dismissable stays in the list
+                          return false;
+                        }
+                      },
+                    ),
+                  )
+                ],
+              );
+            },
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _onResult() {
+    if (widget.viewModel.deleteBooking.completed) {
+      widget.viewModel.deleteBooking.clearResult();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(AppLocalization.of(context).bookingDeleted),
+        ),
+      );
+    }
+
+    if (widget.viewModel.deleteBooking.error) {
+      widget.viewModel.deleteBooking.clearResult();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(AppLocalization.of(context).errorWhileDeletingBooking),
+        ),
+      );
+    }
+  }
+}
+
+class _Booking extends StatelessWidget {
+  const _Booking({
+    super.key,
+    required this.booking,
+    required this.onTap,
+    required this.confirmDismiss,
+  });
+
+  final BookingSummary booking;
+  final GestureTapCallback onTap;
+  final ConfirmDismissCallback confirmDismiss;
+
+  @override
+  Widget build(BuildContext context) {
+    /// Burdaki dismissible widget'i bir booking'i silmek icin kullanilan widget'tir.
+    return Dismissible(
+      key: ValueKey(booking.id),
+      direction: DismissDirection.endToStart,
+      confirmDismiss: confirmDismiss,
+      background: Container(
+        color: AppColors.grey1,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(right: Dimens.paddingHorizontal),
+              child: Icon(Icons.delete),
+            ),
+          ],
+        ),
+      ),
+      child: InkWell(
+        onTap: onTap,
+        child: Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: Dimens.of(context).paddingScreenHorizontal,
+            vertical: Dimens.paddingVertical,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                booking.name,
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+              Text(
+                dateFormatStartEnd(
+                  DateTimeRange(
+                    start: booking.startDate,
+                    end: booking.endDate,
+                  ),
+                ),
+                style: Theme.of(context).textTheme.bodyLarge,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// Copyright 2024 The Flutter team. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+import 'dart:async';
+
+import 'package:flutter/foundation.dart';
+import 'package:logging/logging.dart';
+
+import '../../../data/repositories/booking/booking_repository.dart';
+import '../../../data/repositories/user/user_repository.dart';
+import '../../../domain/models/booking/booking_summary.dart';
+import '../../../domain/models/user/user.dart';
+import '../../../utils/command.dart';
+import '../../../utils/result.dart';
+
+/// Homeview model icinde birden fazla repository kullanilabilir.
+/// Bu ornekte BookingRepository ve UserRepository kullanilmistir.
+/// Aralarında  many to many iliski vardır.
+/// Reposıtorler vıew model ıcınde private olarak tanımlanır.
+/// Diger turlu view'dan direkt repository'e erisim saglanabilir.
+/// Bunu istemiyoruz. Cunku view direk repository'e erismemesi gerekir
+/// Repository Data Layerdir. Ama view UI Layerdir.
+///
+/// Kullanici homeview'a geldiginde home view modeli olusturulur.
+/// _load metotu isini bitirene kadar UI state bos durumdadir.
+/// View bu durumda loading indicator gosterir.
+/// _Load metotu isini bitirince eger basarili ise yeni data view modelde olur
+/// ve view'a haber verilir. View'da bunu gosterir.Ona gore UI yeniden render edilir.
+class HomeViewModel extends ChangeNotifier {
+  HomeViewModel({
+    required BookingRepository bookingRepository,
+    required UserRepository userRepository,
+  })  : _bookingRepository = bookingRepository,
+        _userRepository = userRepository {
+
+    /// Burda Command ChangeNotifier sinifindan extend almis baska bir siniftir,
+    /// Basitce ornegi boyledir.Command constractorunda bir class parametersei almasi
+    /// zorunlu kilar. Buda variable degil de bir actiondir. Yani bir fonksiyon.
+    /// Aldigi fonksiyonu bir String deger aliyor gibi de dusunebiliriz.
+    /// execute classin metotudur. action paramaterdir. Ama execute bir class metotudur.
+    /// Bunu aldiktan sonra Nasil ki Changenotifieri bir widget agacinda enjekte ederken
+    /// ChangeNotifierProvider ile enjekte edip sonra ..init yapip metotdu cagiriyorsak bunu da
+    /// ayni sekilde yapabiliriz.
+    /// load = Command0(_load)..execute(); Burda yapilan da odur. Aksiyonu ver. Daha sonra execute et
+    /// Parametre olarak verdigimiz Ilgili aksiyon execute icinde cagrilir.
+    /// class Command extends ChangeNotifier {
+    //   Command(this._action);
+    // void Function() _action;
+    //
+    // void execute() {
+    //   // run _action
+    // }
+    //   }
+
+    load = Command0(_load)..execute();
+    deleteBooking = Command1(_deleteBooking);
+  }
+
+  final BookingRepository _bookingRepository;
+  final UserRepository _userRepository;
+
+  /// Loglari yonetmek icin kullanilan bir paket var.logging: ^1.2.0
+  /// Bu paket kullanilarak loglama yapilabilir.Once bir nesne olustur. Daha sonra
+  final _log = Logger('HomeViewModel');
+
+  /// metotlarini kullan.
+
+  List<BookingSummary> _bookings = [];
+  User? _user;
+
+  late Command0 load;
+  late Command1<void, int> deleteBooking;
+
+  List<BookingSummary> get bookings => _bookings;
+
+  User? get user => _user;
+
+  /// [_load] methodu ile veriler cekilir.
+  /// Bu metot repository katmanina gider ordaki metotu calistirir.
+  /// Bu bir metotdur. Bu metot ne donerse Command pattern icinde
+  /// bunu elde edecegiz.
+  /// _result = await action(); bu satirda action calistirilir.
+  Future<Result> _load() async {
+    _log.fine('home _load started');
+
+    /// Fine leveldaki loglama icin kullanilir.
+    _log.config("config");
+    _log.info(":info");
+    _log.warning("warning");
+
+    try {
+      /// View model Reposirotry katmanina baglanir.
+      /// Repository katmani da service cikar ve verileri getirir.
+      final result = await _bookingRepository.getBookingsList();
+      /// Donen sonuca gore islem yapilir.
+      switch (result) {
+        case Ok<List<BookingSummary>>():
+          _bookings = result.value;
+          _log.fine('Loaded bookings');
+        case Error<List<BookingSummary>>():
+          _log.warning('Failed to load bookings', result.error);
+          return result;
+      }
+
+      final userResult = await _userRepository.getUser();
+      switch (userResult) {
+        case Ok<User>():
+          _user = userResult.value;
+          _log.fine('Loaded user');
+        case Error<User>():
+          _log.warning('Failed to load user', userResult.error);
+      }
+
+      return userResult;
+    } finally {
+      notifyListeners();
+    }
+  }
+
+  Future<Result<void>> _deleteBooking(int id) async {
+    print("_deleteBooking started");
+    try {
+      final resultDelete = await _bookingRepository.delete(id);
+      switch (resultDelete) {
+        case Ok<void>():
+          _log.fine('Deleted booking $id');
+        case Error<void>():
+          _log.warning('Failed to delete booking $id', resultDelete.error);
+          return resultDelete;
+      }
+
+      // After deleting the booking, we need to reload the bookings list.
+      // BookingRepository is the source of truth for bookings.
+      final resultLoadBookings = await _bookingRepository.getBookingsList();
+      switch (resultLoadBookings) {
+        case Ok<List<BookingSummary>>():
+          _bookings = resultLoadBookings.value;
+          _log.fine('Loaded bookings');
+        case Error<List<BookingSummary>>():
+          _log.warning('Failed to load bookings', resultLoadBookings.error);
+          return resultLoadBookings;
+      }
+
+      return resultLoadBookings;
+    } finally {
+      notifyListeners();
+    }
+  }
+}
+
+/// UI State nedir?
+/// View modelin view'a gonderdigi data UI State olarak bilinir.
+/// Bu data sayesinde view tarafinda UI render edilir.UI state
+/// immutable olmalidir. Yani degistirilemez.
+
+Birde bu view'a view modeli nasil bagladigimi gosteriyorum
+
+ /// Home screen
+        GoRoute(
+          path: Routes.home,
+
+          /// Burda page builder yerine builder'da kullanilabilir. Tek farki
+          /// pageBuilder ile platform spesficik bir safya gecisi yapilabilir
+
+          /// Nested route'a giderken ana route'daki metotlar da calisiyor.
+          /// Orasini da yeniden rebuild ediyor.
+          /// Giderken rebuild ediyor. Peki geri gelirken ne yapiyor.
+          /// Geri gelirken de yeniden calistiriyor.
+
+          builder: (context, state) {
+            print("home screen invoked! Home screen parent route'dur.");
+            final viewModel = HomeViewModel(
+              bookingRepository: context.read(),
+              userRepository: context.read(),
+            );
+            return HomeScreen(viewModel: viewModel);
+          },
+Bunlari analiz etmeni istiyorum
+
+
+
+
+Teşekkürler, paylaştığın kodları detaylı bir şekilde inceledim. Flutter'da Provider tabanlı bir mimari kullandığını ve MVVM (Model-View-ViewModel) yaklaşımını benimseyerek Clean Architecture prensiplerine uygun bir yapı oluşturduğunu görüyorum. Kodun oldukça düzenli ve iyi yapılandırılmış. Şimdi, paylaştığın kodları analiz ederek mimariyi, güçlü yönleri, potansiyel iyileştirme alanlarını ve bazı önerileri paylaşacağım.
+
+Mimari Analizi
+1. Genel Mimari Yapısı
+MVVM Kullanımı: HomeScreen (View) ve HomeViewModel (ViewModel) arasındaki ilişki, MVVM desenine uygun şekilde tasarlanmış. View, ViewModel'deki state değişikliklerini (ListenableBuilder ile) dinliyor ve buna göre UI'yi güncelliyor.
+Provider Entegrasyonu: ViewModel, GoRouter ile tanımlı bir route içinde context.read() ile enjekte edilen BookingRepository ve UserRepository bağımlılıklarını alıyor. Bu, Dependency Injection prensibine uygun ve Provider'ın doğru kullanımını yansıtıyor.
+Clean Architecture: ViewModel, veri katmanındaki repository'lere (BookingRepository, UserRepository) bağımlı. View, doğrudan repository'lere erişmiyor; bu, katmanlar arası ayrımı (UI Layer ↔ Domain Layer ↔ Data Layer) koruyor.
+Command Pattern: Command0 ve Command1 sınıflarıyla, asenkron işlemleri (örneğin, _load ve _deleteBooking) kapsülleyen bir yapı kullanılmış. Bu, ViewModel'deki iş mantığını daha düzenli ve test edilebilir hale getiriyor.
+2. View Katmanı (HomeScreen)
+Scaffold Yapısı: HomeScreen, bir Scaffold ile temel UI iskeletini oluşturuyor. FloatingActionButton ile yeni bir rezervasyon oluşturmak için Routes.search route'una yönlendirme yapılıyor.
+State Yönetimi: ListenableBuilder ile ViewModel'deki load ve genel state değişikliklerini dinliyor. Bu, yalnızca gerekli durumlarda UI'nin yeniden çizilmesini sağlıyor (performans açısından iyi bir seçim).
+Error ve Loading Durumları: widget.viewModel.load.running ve widget.viewModel.load.error ile yükleme ve hata durumları ele alınıyor. Hata durumunda ErrorIndicator gösteriliyor ve tekrar deneme seçeneği sunuluyor.
+Dismissible Widget: _Booking widget'ı, rezervasyonları silmek için Dismissible kullanıyor. Silme işlemi, ViewModel'deki deleteBooking komutuyla gerçekleştiriliyor ve başarılı/başarısız durumlar SnackBar ile kullanıcıya bildiriliyor.
+Yaşam Döngüsü Yönetimi: initState, didUpdateWidget ve dispose metotlarında deleteBooking listener'larının doğru şekilde eklenmesi ve kaldırılması, memory leak'leri önlemek için iyi bir uygulama.
+3. ViewModel Katmanı (HomeViewModel)
+Bağımlılıklar: BookingRepository ve UserRepository private olarak tanımlanmış, bu da encapsulation'ı güçlendiriyor.
+State Yönetimi: _bookings ve _user değişkenleri, UI state'ini temsil ediyor. notifyListeners() ile state değişiklikleri View'a bildiriliyor.
+Asenkron İşlemler: _load ve _deleteBooking metotları, Result türüyle hata ve başarı durumlarını ele alıyor. switch ifadeleriyle Ok ve Error durumlarının ayrıştırılması, kodun okunabilirliğini artırıyor.
+Logging: logging paketiyle loglama yapılması, hata ayıklama ve üretim ortamında sorun takibi için faydalı.
+Command Pattern: Command0 ve Command1 ile asenkron işlemlerin soyutlanması, kodun yeniden kullanılabilirliğini ve test edilebilirliğini artırıyor.
+4. Router Entegrasyonu
+GoRouter ile route tanımı, HomeScreen için ViewModel'in oluşturulmasını ve bağımlılıkların enjeksiyonunu sağlıyor. builder yerine pageBuilder kullanılabilir yorumun da doğru; bu, platforma özgü geçiş animasyonları için esneklik sağlar.
+Nested route'larda rebuild davranışını sorgulaman ilginç. GoRouter'ın varsayılan davranışı, parent route'un state'ini korurken yalnızca gerekli child route'ları rebuild etmektir. Ancak, print("home screen invoked!") log'undan anladığım kadarıyla, geri dönüşlerde de rebuild olduğunu gözlemlemişsin. Bu, GoRouter'ın state yönetimi veya HomeViewModel'in yeniden oluşturulmasıyla ilgili olabilir.
+Güçlü Yönler
+Katman Ayrımı: UI, Domain ve Data katmanları net bir şekilde ayrılmış. View, yalnızca ViewModel ile iletişim kuruyor.
+Performans Odaklılık: ListenableBuilder ile yalnızca gerekli durumlarda rebuild yapılıyor. _Booking widget'ında ValueKey kullanımı, liste elemanlarının doğru şekilde güncellenmesini sağlıyor.
+Hata Yönetimi: Hata durumları (ErrorIndicator, SnackBar) kullanıcı dostu bir şekilde ele alınıyor.
+Test Edilebilirlik: Command pattern ve repository bağımlılıkları, unit test yazımını kolaylaştırıyor.
+Yeniden Kullanılabilirlik: LogoutButton gibi bileşenlerin ayrı ViewModel'lerle modüler hale getirilmesi, kodun yeniden kullanılabilirliğini artırıyor.
+Potansiyel İyileştirme Alanları ve Öneriler
+1. ViewModel'in Yeniden Oluşturulması
+Sorun: GoRouter'ın builder fonksiyonunda her route'a geçişte HomeViewModel yeniden oluşturuluyor. Bu, _load metodunun her seferinde çalışmasına neden olabilir ve performans kaybına yol açabilir.
+Öneri:
+HomeViewModel'i bir singleton veya Provider scope'unda tutarak yeniden oluşturulmasını engelleyebilirsin. Örneğin:
+dart
+
+Copy
+final viewModel = context.read<HomeViewModel>();
+if (viewModel.load.completed) {
+  return HomeScreen(viewModel: viewModel);
+}
+return HomeScreen(viewModel: HomeViewModel(
+  bookingRepository: context.read(),
+  userRepository: context.read(),
+));
+Alternatif olarak, GoRouter'ın state management özelliklerini kullanarak ViewModel'in önbelleğe alınmasını sağlayabilirsin.
+2. Rebuild Optimizasyonu
+Sorun: print("home screen listenable builder called") log'undan, ListenableBuilder'ın sıkça tetiklendiği anlaşılıyor. Bu, gereksiz rebuild'lere neden olabilir.
+Öneri:
+ListenableBuilder'ın scope'unu daralt. Örneğin, yalnızca bookings listesinin değiştiği durumlarda rebuild olacak bir yapı kur:
+dart
+
+Copy
+ListenableBuilder(
+  listenable: widget.viewModel,
+  builder: (context, _) {
+    return SliverList.builder(
+      itemCount: widget.viewModel.bookings.length,
+      itemBuilder: (_, index) => _Booking(...),
+    );
+  },
+);
+ValueListenableBuilder ile yalnızca belirli bir state parçasını (örneğin, bookings) dinleyebilirsin.
+3. Command Pattern'ın Basitleştirilmesi
+Sorun: Command0 ve Command1 pattern'ı güçlü olsa da, küçük ölçekli projelerde ek karmaşıklık yaratabilir.
+Öneri:
+Eğer projen küçükse, Command yerine doğrudan Future tabanlı metotlar kullanabilirsin. Örneğin:
+dart
+
+Copy
+Future<void> load() async {
+  final result = await _load();
+  notifyListeners();
+}
+Ancak, büyük projelerde Command pattern'ın sağladığı soyutlama avantajını korumak mantıklı.
+4. Error Handling
+Sorun: Hata durumlarında SnackBar gösteriliyor, ancak hata mesajları genelde statik. Daha ayrıntılı hata mesajları kullanıcı deneyimini iyileştirebilir.
+Öneri:
+Repository'den dönen Error nesnesindeki detayları (örneğin, result.error.message) kullanıcıya gösterebilirsin:
+dart
+
+Copy
+if (widget.viewModel.deleteBooking.error) {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text(widget.viewModel.deleteBooking.error?.message ?? AppLocalization.of(context).errorWhileDeletingBooking),
+    ),
+  );
+}
+5. GoRouter ve Rebuild Sorunu
+Sorun: Nested route'lara geçiş ve geri dönüşlerde parent route'un rebuild edilmesi.
+Öneri:
+GoRouter'ın GoRouter.of(context).push() yerine GoRouter.of(context).go() kullanmayı deneyerek state'in korunmasını sağlayabilirsin.
+Alternatif olarak, GoRouter'ın redirect özelliğini kullanarak route değişimlerini daha iyi yönetebilirsin.
+Rebuild'leri debug etmek için Flutter DevTools'u kullanarak hangi widget'ların rebuild edildiğini analiz et.
+6. State Immutable Hale Getirme
+Sorun: _bookings ve _user değişkenleri mutable. Clean Architecture prensiplerine göre UI state'in immutable olması önerilir.
+Öneri:
+_bookings ve _user'ı final yaparak ve yeni liste/nesne atamalarıyla güncelleyerek immutable hale getirebilirsin:
+dart
+
+Copy
+List<BookingSummary> get bookings => List.unmodifiable(_bookings);
+Ya da bir HomeViewState sınıfı tanımlayarak state'i tamamen kapsülleyebilirsin:
+dart
+
+Copy
+class HomeViewState {
+  final List<BookingSummary> bookings;
+  final User? user;
+  final bool isLoading;
+  final String? error;
+
+  HomeViewState({this.bookings = const [], this.user, this.isLoading = false, this.error});
+}
+7. Logging'i Güçlendirme
+Öneri: logging paketini daha yapılandırılmış kullanabilirsin. Örneğin, production'da yalnızca warning ve üstü logları göstermek için:
+dart
+
+Copy
+Logger.root.level = kReleaseMode ? Level.WARNING : Level.ALL;
+Logger.root.onRecord.listen((record) {
+  print('${record.level.name}: ${record.time}: ${record.message}');
+});
+Ek Öneriler
+Widget Testleri: HomeScreen ve _Booking için widget testleri yazarak UI davranışlarını doğrulayabilirsin. Örneğin, ListenableBuilder'ın doğru durumlarda rebuild edildiğini test et.
+Unit Testleri: HomeViewModel'deki _load ve _deleteBooking metotları için mock repository'ler kullanarak unit testler yaz.
+State Management Alternatifleri: Provider yerine Riverpod'u değerlendirebilirsin. Riverpod, daha modern bir API sunar ve scope yönetimi açısından avantajlıdır.
+Performans İzleme: Büyük veri setlerinde SliverList.builder'ın performansını izle. Gerekirse ListView.separated gibi alternatifleri test et.
+Sonuç
+Mevcut mimarin, Flutter projeleri için oldukça sağlam bir temel sunduğunu söyleyebilirim. MVVM, Provider, ve Clean Architecture kombinasyonu, ölçeklenebilir ve bakımı kolay bir yapı oluşturmuş. Yukarıdaki önerilerle, özellikle rebuild optimizasyonu, state immutable'lığı ve hata yönetimi gibi alanlarda küçük iyileştirmeler yaparak mimariyi daha da güçlendirebilirsin.
+
+Eğer spesifik bir konuda daha derinlemesine tartışmak istersen (örneğin, rebuild sorununu çözmek, Riverpod'a geçiş, veya test yazımı), lütfen belirt! 😊
+
+
+
+
+
+
+
+
+Alternatif olarak, GoRouter'ın state management özelliklerini kullanarak ViewModel'in önbelleğe alınmasını sağlayabilirsin.
+Bunu aciklar misin?
+
+
+
+
+Tabii! GoRouter'ın state management özelliklerini kullanarak HomeViewModel gibi bir ViewModel'in önbelleğe alınması (yani yeniden oluşturulmasının engellenmesi), özellikle performans optimizasyonu ve gereksiz rebuild'lerin önüne geçmek için faydalı bir yöntemdir. Bu yaklaşım, GoRouter'ın sağladığı state yönetimi mekanizmalarını ve Flutter'ın bağımlılık enjeksiyon araçlarıyla (örneğin, Provider) entegrasyonunu içerir. Şimdi bunu adım adım açıklayayım:
+
+1. Sorunun Özeti
+Şu anki yapında, GoRouter'ın builder fonksiyonu her route'a geçişte veya geri dönüşte HomeViewModel'i yeniden oluşturuyor:
+
+dart
+
+Copy
+builder: (context, state) {
+  print("home screen invoked! Home screen parent route'dur.");
+  final viewModel = HomeViewModel(
+    bookingRepository: context.read(),
+    userRepository: context.read(),
+  );
+  return HomeScreen(viewModel: viewModel);
+},
+Bu, her rebuild'de _load metodunun çalışmasına ve gereksiz API çağrılarına neden olabilir. GoRouter'ın state yönetimi özelliklerini kullanarak ViewModel'in bir kez oluşturulmasını ve önbellekte tutulmasını sağlayabiliriz.
+
+2. GoRouter'da State Yönetimi
+GoRouter, route'lar arasında state yönetimini desteklemek için birkaç mekanizma sunar:
+
+GoRouterState: Her route çağrıldığında builder veya pageBuilder fonksiyonuna geçirilen state nesnesi, route ile ilgili bilgileri (örneğin, query parametreleri, path) içerir.
+Stateful Navigation: GoRouter, route'ların kendi state'lerini korumasına olanak tanır. Bu, özellikle nested route'larda parent route'un state'ini korumak için kullanışlıdır.
+Provider ile Entegrasyon: GoRouter'ın state yönetimini, Flutter'daki Provider, Riverpod veya benzeri bir bağımlılık enjeksiyon aracıyla birleştirerek ViewModel'in önbelleğe alınmasını sağlayabiliriz.
+3. ViewModel'i Önbelleğe Alma Çözümü
+HomeViewModel'i önbelleğe almak için aşağıdaki adımları izleyebiliriz:
+
+Adım 1: ViewModel'i Provider ile Yönet
+HomeViewModel'i bir Provider scope'unda tanımlayarak, route'lar arasında yeniden oluşturulmasını engelleyebiliriz. Bunun için Provider veya ChangeNotifierProvider kullanabiliriz.
+
+Örnek:
+
+dart
+
+Copy
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:go_router/go_router.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MultiProvider(
+      providers: [
+        // BookingRepository ve UserRepository'yi sağla
+        Provider<BookingRepository>(create: (_) => BookingRepositoryImpl()),
+        Provider<UserRepository>(create: (_) => UserRepositoryImpl()),
+        // HomeViewModel'i ChangeNotifierProvider ile sağla
+        ChangeNotifierProvider(
+          create: (context) => HomeViewModel(
+            bookingRepository: context.read<BookingRepository>(),
+            userRepository: context.read<UserRepository>(),
+          ),
+        ),
+      ],
+      child: MaterialApp.router(
+        routerConfig: _router,
+      ),
+    );
+  }
+
+  final _router = GoRouter(
+    routes: [
+      GoRoute(
+        path: Routes.home,
+        builder: (context, state) {
+          // ViewModel'i yeniden oluşturmak yerine Provider'dan oku
+          final viewModel = context.read<HomeViewModel>();
+          return HomeScreen(viewModel: viewModel);
+        },
+      ),
+    ],
+  );
+}
+Açıklama:
+
+ChangeNotifierProvider ile HomeViewModel, uygulama seviyesinde veya belirli bir scope'ta (örneğin, MaterialApp içinde) tek bir kez oluşturulur.
+context.read<HomeViewModel>() ile ViewModel'e erişilir, böylece her route çağrısında yeni bir instance yerine aynı instance kullanılır.
+Adım 2: GoRouter'ın State'ini Kullanarak Önbellekleme
+Eğer ViewModel'in sadece belirli bir route ağacı için önbelleğe alınmasını istiyorsan, GoRouter'ın stateful navigation özelliğini kullanabilirsin. GoRouter, StatefulShellRoute ile dallı route ağaçlarında state'in korunmasını destekler.
+
+Örnek:
+
+dart
+
+Copy
+final _router = GoRouter(
+  routes: [
+    StatefulShellRoute.indexedStack(
+      builder: (context, state, navigationShell) {
+        return navigationShell; // Ana route yapısı
+      },
+      branches: [
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: Routes.home,
+              builder: (context, state) {
+                // ViewModel'i önbelleğe almak için Provider kullanıyoruz
+                final viewModel = context.read<HomeViewModel>();
+                return HomeScreen(viewModel: viewModel);
+              },
+            ),
+          ],
+        ),
+        // Diğer route dalları
+      ],
+    ),
+  ],
+);
+Açıklama:
+
+StatefulShellRoute, birden fazla route dalını (branch) destekler ve her dalın state'ini korur.
+HomeViewModel, Provider ile üst seviyede tanımlandığı için, route'lar arasında geçiş yaparken aynı instance korunur.
+Adım 3: Route Geçişlerinde State'i Koruma
+GoRouter'ın push yerine go metodunu kullanarak veya nested route'larda pop davranışını kontrol ederek, parent route'un rebuild edilmesini minimize edebilirsin. Örneğin:
+
+dart
+
+Copy
+FloatingActionButton.extended(
+  onPressed: () => context.go(Routes.search), // push yerine go kullan
+  label: Text(AppLocalization.of(context).bookNewTrip),
+  icon: const Icon(Icons.add_location_outlined),
+),
+Açıklama:
+
+context.go(): Yeni bir route'a geçiş yapar ve stack'i sıfırlamaz, böylece parent route'un state'i korunur.
+context.push(): Yeni bir route'u stack'e ekler, ancak geri dönüşlerde parent route'un rebuild edilmesi riskini artırabilir.
+Adım 4: ViewModel'in İlk Yüklemesini Kontrol Et
+HomeViewModel'in _load metodunun yalnızca gerekli durumlarda çalışmasını sağlamak için, ViewModel'de bir kontrol mekanizması ekleyebilirsin:
+
+dart
+
+Copy
+class HomeViewModel extends ChangeNotifier {
+  HomeViewModel({
+    required BookingRepository bookingRepository,
+    required UserRepository userRepository,
+  })  : _bookingRepository = bookingRepository,
+        _userRepository = userRepository {
+    load = Command0(_load);
+    deleteBooking = Command1(_deleteBooking);
+    // İlk yüklemeyi yalnızca bir kez çalıştır
+    if (_bookings.isEmpty) {
+      load.execute();
+    }
+  }
+
+  // ... diğer kodlar
+}
+Açıklama:
+
+_bookings.isEmpty kontrolü, ViewModel'in yeniden oluşturulsa bile _load metodunun gereksiz yere çalışmasını engeller.
+4. Alternatif: Riverpod ile Önbellekleme
+Eğer Riverpod kullanıyorsan, HomeViewModel'i bir ChangeNotifierProvider yerine Provider veya StateNotifierProvider ile tanımlayabilirsin. Riverpod, scope yönetimi ve önbellekleme açısından daha esnek bir yapı sunar.
+
+Örnek:
+
+dart
+
+Copy
+final homeViewModelProvider = ChangeNotifierProvider<HomeViewModel>((ref) {
+  return HomeViewModel(
+    bookingRepository: ref.read(bookingRepositoryProvider),
+    userRepository: ref.read(userRepositoryProvider),
+  );
+});
+
+final _router = GoRouter(
+  routes: [
+    GoRoute(
+      path: Routes.home,
+      builder: (context, state) {
+        final viewModel = context.read(homeViewModelProvider);
+        return HomeScreen(viewModel: viewModel);
+      },
+    ),
+  ],
+);
+Açıklama:
+
+Riverpod, ViewModel'in otomatik olarak önbelleğe alınmasını sağlar ve yalnızca bağımlılıklar değiştiğinde yeniden oluşturur.
+ref.read() ile ViewModel'e erişmek, Provider'a kıyasla daha modern bir yaklaşımdır.
+5. Avantajlar
+Performans: ViewModel'in yeniden oluşturulması engellenir, _load gibi pahalı işlemler yalnızca gerekli durumlarda çalışır.
+State Koruma: Nested route'larda veya geri dönüşlerde parent route'un state'i korunur.
+Esneklik: Provider veya Riverpod ile ViewModel, uygulama genelinde veya belirli bir scope'ta kolayca yönetilebilir.
+Temiz Kod: Bağımlılık enjeksiyonu ve önbellekleme, kodun okunabilirliğini ve bakımını kolaylaştırır.
+6. Dikkat Edilmesi Gerekenler
+Scope Yönetimi: ViewModel'i uygulama seviyesinde (MultiProvider ile) tanımlarsan, tüm uygulama boyunca aynı instance kullanılır. Eğer sadece belirli bir route ağacı için önbellekleme istiyorsan, ProviderScope (Riverpod) veya alt bir Provider widget'ı kullan.
+Memory Leak: ChangeNotifierProvider kullanıyorsan, ViewModel'in dispose metodunda listener'ları temizlediğinden emin ol (mevcut kodunda bunu zaten yapıyorsun).
+Debug: Önbellekleme sonrası rebuild davranışını doğrulamak için print yerine Flutter DevTools'u kullan. Hangi widget'ların rebuild edildiğini analiz edebilirsin.
+Sonuç
+GoRouter'ın state management özelliklerini kullanarak HomeViewModel'i önbelleğe almak için en pratik yöntem, Provider veya Riverpod ile ViewModel'i bir üst scope'ta tanımlamak ve context.read() ile route'larda erişmektir. StatefulShellRoute gibi ileri düzey özellikler, karmaşık route ağaçlarında ek avantaj sağlar. Eğer mevcut Provider yapını korumak istiyorsan, yukarıdaki MultiProvider örneğiyle başlayabilirsin. Riverpod'a geçiş yapmayı düşünüyorsan, homeViewModelProvider örneği modern bir alternatif sunar.
+
+Eğer bu konuda daha fazla detay (örneğin, Riverpod kurulumu veya StatefulShellRoute için tam bir örnek) istersen, lütfen belirt! 😊
+
+
+
+
+
+
+
+
+Provider ile devam edelim biz.
+6. State Immutable Hale Getirmeyi anlatir misin?
+
+
+
+
+Tabii, Provider ile devam ederek HomeViewModel içindeki state'in immutable hale getirilmesini detaylı bir şekilde açıklayayım. Clean Architecture ve MVVM prensiplerine uygun olarak, UI state'in immutable (değiştirilemez) olması, kodun öngörülebilirliğini, test edilebilirliğini ve hata ayıklamasını kolaylaştırır. Şu anki HomeViewModel kodunda _bookings ve _user değişkenleri mutable (değiştirilebilir) durumda. Bunları immutable hale getirmek için birkaç yöntem kullanabiliriz. Aşağıda adım adım açıklayacağım.
+
+1. Immutable State Nedir ve Neden Önemli?
+Immutable state, bir kez oluşturulduktan sonra içeriği değiştirilemeyen veri yapılarıdır. Flutter'da, state'in immutable olması:
+
+Öngörülebilirlik: State'in yanlışlıkla değişmesi engellenir.
+Performans: Immutable state, Flutter'ın rebuild mekanizmasıyla daha iyi çalışır (örneğin, const widget'lar veya identical() karşılaştırmaları).
+Test Edilebilirlik: State'in sabit olması, unit testlerde beklenen davranışları doğrulamayı kolaylaştırır.
+Clean Architecture: Domain ve UI katmanlarında veri akışını daha net hale getirir.
+Mevcut kodunda:
+
+dart
+
+Copy
+List<BookingSummary> _bookings = [];
+User? _user;
+_bookings ve _user değişkenleri mutable. Örneğin, _bookings.add() gibi bir işlemle liste doğrudan değiştirilebilir, bu da state yönetiminde hatalara yol açabilir. Immutable state için, bu değişkenlerin değiştirilemez kopyalarını sunmalıyız.
+
+2. Immutable State Uygulama Yöntemleri
+HomeViewModel'deki state'i immutable hale getirmek için iki ana yaklaşım kullanabiliriz:
+
+Değişkenleri final Yapma ve Kopyalarla Güncelleme: _bookings ve _user'ı final yaparak ve her güncellemede yeni bir kopya oluşturarak immutable hale getirebiliriz.
+State Sınıfı Tanımlama: Tüm state'i kapsayan bir HomeViewState sınıfı oluşturarak, state'i tek bir immutable nesne olarak yönetebiliriz.
+Her iki yöntemi de açıklayacağım, ancak ikinci yöntem (state sınıfı) daha yapılandırılmış ve Clean Architecture'a uygun olduğu için önerilir. Provider ile uyumlu şekilde nasıl yapılacağına odaklanacağım.
+
+3. Yöntem 1: Değişkenleri final Yapma ve Kopyalarla Güncelleme
+Bu yöntemde, _bookings ve _user'ı doğrudan immutable hale getirmek için List.unmodifiable gibi araçlar kullanacağız ve her güncellemede yeni bir kopya oluşturacağız.
+
+Değişiklikler
+HomeViewModel'i şu şekilde güncelleyebiliriz:
+
+dart
+
+Copy
+class HomeViewModel extends ChangeNotifier {
+  HomeViewModel({
+    required BookingRepository bookingRepository,
+    required UserRepository userRepository,
+  })  : _bookingRepository = bookingRepository,
+        _userRepository = userRepository {
+    load = Command0(_load)..execute();
+    deleteBooking = Command1(_deleteBooking);
+  }
+
+  final BookingRepository _bookingRepository;
+  final UserRepository _userRepository;
+
+  final _log = Logger('HomeViewModel');
+
+  // Mutable yerine immutable list ve nullable User
+  List<BookingSummary> _bookings = const [];
+  User? _user;
+
+  late Command0 load;
+  late Command1<void, int> deleteBooking;
+
+  // Getter'lar immutable kopyalar döner
+  List<BookingSummary> get bookings => List.unmodifiable(_bookings);
+  User? get user => _user;
+
+  Future<Result> _load() async {
+    _log.fine('home _load started');
+    try {
+      final result = await _bookingRepository.getBookingsList();
+      switch (result) {
+        case Ok<List<BookingSummary>>():
+          // Yeni bir kopya oluştur
+          _bookings = List.unmodifiable(result.value);
+          _log.fine('Loaded bookings');
+        case Error<List<BookingSummary>>():
+          _log.warning('Failed to load bookings', result.error);
+          return result;
+      }
+
+      final userResult = await _userRepository.getUser();
+      switch (userResult) {
+        case Ok<User>():
+          _user = userResult.value; // User zaten immutable olmalı
+          _log.fine('Loaded user');
+        case Error<User>():
+          _log.warning('Failed to load user', userResult.error);
+      }
+
+      return userResult;
+    } finally {
+      notifyListeners();
+    }
+  }
+
+  Future<Result<void>> _deleteBooking(int id) async {
+    _log.fine('_deleteBooking started');
+    try {
+      final resultDelete = await _bookingRepository.delete(id);
+      switch (resultDelete) {
+        case Ok<void>():
+          _log.fine('Deleted booking $id');
+        case Error<void>():
+          _log.warning('Failed to delete booking $id', resultDelete.error);
+          return resultDelete;
+      }
+
+      final resultLoadBookings = await _bookingRepository.getBookingsList();
+      switch (resultLoadBookings) {
+        case Ok<List<BookingSummary>>():
+          // Yeni bir kopya oluştur
+          _bookings = List.unmodifiable(resultLoadBookings.value);
+          _log.fine('Loaded bookings');
+        case Error<List<BookingSummary>>():
+          _log.warning('Failed to load bookings', resultLoadBookings.error);
+          return resultLoadBookings;
+      }
+
+      return resultLoadBookings;
+    } finally {
+      notifyListeners();
+    }
+  }
+}
+Yapılan Değişiklikler
+Immutable List: _bookings = const [] ile başlangıçta sabit bir liste tanımlandı. List.unmodifiable() ile repository'den gelen veriler immutable bir kopya olarak atanıyor.
+Getter'lar: get bookings metodu, _bookings'in değiştirilemez bir kopyasını (List.unmodifiable) döndürüyor. Böylece View, listeyi yanlışlıkla değiştiremez.
+Kopya ile Güncelleme: _load ve _deleteBooking metotlarında _bookings'e yeni bir liste atanıyor, böylece eski liste değiştirilmiyor.
+User: _user zaten nullable ve immutable bir veri modeli olduğu varsayılıyor (örneğin, User sınıfı final alanlara sahipse).
+Avantajlar
+Basit bir değişiklik, mevcut kod yapısını bozmadan uygulanabilir.
+List.unmodifiable ile liste güvenliği sağlanır.
+Provider ile tam uyumlu.
+Dezavantajlar
+State büyüdükçe (örneğin, loading durumu, error mesajları eklenirse), birden fazla değişkeni yönetmek karmaşıklaşabilir.
+State'in tamamını bir arada görmek zorlaşabilir.
+4. Yöntem 2: State Sınıfı Tanımlama (Önerilen)
+Bu yöntemde, tüm UI state'ini temsil eden bir HomeViewState sınıfı oluşturacağız. Bu sınıf immutable olacak ve state değişiklikleri yeni bir HomeViewState nesnesi oluşturarak yapılacak. Bu, Redux veya BLoC gibi yaklaşımlara benzer bir yapı sunar ve daha yapılandırılmış bir çözüm sağlar.
+
+Adım 1: HomeViewState Sınıfı Tanımlama
+dart
+
+Copy
+class HomeViewState {
+  final List<BookingSummary> bookings;
+  final User? user;
+  final bool isLoading;
+  final String? error;
+
+  const HomeViewState({
+    this.bookings = const [],
+    this.user,
+    this.isLoading = false,
+    this.error,
+  });
+
+  // Yeni state oluşturmak için kopya metodu
+  HomeViewState copyWith({
+    List<BookingSummary>? bookings,
+    User? user,
+    bool? isLoading,
+    String? error,
+  }) {
+    return HomeViewState(
+      bookings: bookings ?? this.bookings,
+      user: user ?? this.user,
+      isLoading: isLoading ?? this.isLoading,
+      error: error ?? this.error,
+    );
+  }
+}
+Açıklama:
+
+HomeViewState, tüm state'i (bookings, user, isLoading, error) kapsar.
+const constructor ile nesne immutable hale getirilir.
+copyWith metodu, mevcut state'in belirli alanlarını güncelleyerek yeni bir kopya oluşturur.
+Adım 2: HomeViewModel'i Güncelleme
+HomeViewModel'i, HomeViewState kullanacak şekilde yeniden düzenleyelim:
+
+dart
+
+Copy
+class HomeViewModel extends ChangeNotifier {
+  HomeViewModel({
+    required BookingRepository bookingRepository,
+    required UserRepository userRepository,
+  })  : _bookingRepository = bookingRepository,
+        _userRepository = userRepository {
+    load = Command0(_load)..execute();
+    deleteBooking = Command1(_deleteBooking);
+  }
+
+  final BookingRepository _bookingRepository;
+  final UserRepository _userRepository;
+
+  final _log = Logger('HomeViewModel');
+
+  // State'i tek bir immutable nesne olarak tutuyoruz
+  HomeViewState _state = const HomeViewState();
+
+  late Command0 load;
+  late Command1<void, int> deleteBooking;
+
+  // Getter ile state'e erişim
+  HomeViewState get state => _state;
+
+  Future<Result> _load() async {
+    _log.fine('home _load started');
+    try {
+      // Loading state'ini güncelle
+      _state = _state.copyWith(isLoading: true);
+      notifyListeners();
+
+      final result = await _bookingRepository.getBookingsList();
+      switch (result) {
+        case Ok<List<BookingSummary>>():
+          _state = _state.copyWith(
+            bookings: List.unmodifiable(result.value),
+            isLoading: false,
+          );
+          _log.fine('Loaded bookings');
+        case Error<List<BookingSummary>>():
+          _state = _state.copyWith(
+            isLoading: false,
+            error: result.error.toString(),
+          );
+          _log.warning('Failed to load bookings', result.error);
+          return result;
+      }
+
+      final userResult = await _userRepository.getUser();
+      switch (userResult) {
+        case Ok<User>():
+          _state = _state.copyWith(
+            user: userResult.value,
+            isLoading: false,
+          );
+          _log.fine('Loaded user');
+        case Error<User>():
+          _state = _state.copyWith(
+            isLoading: false,
+            error: userResult.error.toString(),
+          );
+          _log.warning('Failed to load user', userResult.error);
+      }
+
+      return userResult;
+    } finally {
+      notifyListeners();
+    }
+  }
+
+  Future<Result<void>> _deleteBooking(int id) async {
+    _log.fine('_deleteBooking started');
+    try {
+      _state = _state.copyWith(isLoading: true);
+      notifyListeners();
+
+      final resultDelete = await _bookingRepository.delete(id);
+      switch (resultDelete) {
+        case Ok<void>():
+          _log.fine('Deleted booking $id');
+        case Error<void>():
+          _state = _state.copyWith(
+            isLoading: false,
+            error: resultDelete.error.toString(),
+          );
+          _log.warning('Failed to delete booking $id', resultDelete.error);
+          return resultDelete;
+      }
+
+      final resultLoadBookings = await _bookingRepository.getBookingsList();
+      switch (resultLoadBookings) {
+        case Ok<List<BookingSummary>>():
+          _state = _state.copyWith(
+            bookings: List.unmodifiable(resultLoadBookings.value),
+            isLoading: false,
+          );
+          _log.fine('Loaded bookings');
+        case Error<List<BookingSummary>>():
+          _state = _state.copyWith(
+            isLoading: false,
+            error: resultLoadBookings.error.toString(),
+          );
+          _log.warning('Failed to load bookings', resultLoadBookings.error);
+          return resultLoadBookings;
+      }
+
+      return resultLoadBookings;
+    } finally {
+      notifyListeners();
+    }
+  }
+}
+Adım 3: HomeScreen'i Güncelleme
+HomeScreen, artık HomeViewModel'deki _state nesnesine erişecek:
+
+dart
+
+Copy
+class _HomeScreenState extends State<HomeScreen> {
+  @override
+  void initState() {
+    super.initState();
+    widget.viewModel.deleteBooking.addListener(_onResult);
+  }
+
+  @override
+  void didUpdateWidget(covariant HomeScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    oldWidget.viewModel.deleteBooking.removeListener(_onResult);
+    widget.viewModel.deleteBooking.addListener(_onResult);
+  }
+
+  @override
+  void dispose() {
+    widget.viewModel.deleteBooking.removeListener(_onResult);
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      floatingActionButton: FloatingActionButton.extended(
+        heroTag: null,
+        key: const ValueKey(bookingButtonKey),
+        onPressed: () => context.go(Routes.search),
+        label: Text(AppLocalization.of(context).bookNewTrip),
+        icon: const Icon(Icons.add_location_outlined),
+      ),
+      body: SafeArea(
+        top: false,
+        bottom: true,
+        child: ListenableBuilder(
+          listenable: widget.viewModel,
+          builder: (context, child) {
+            final state = widget.viewModel.state;
+            if (state.isLoading) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            if (state.error != null) {
+              return ErrorIndicator(
+                title: AppLocalization.of(context).errorWhileLoadingHome,
+                label: AppLocalization.of(context).tryAgain,
+                onPressed: widget.viewModel.load.execute,
+              );
+            }
+            return CustomScrollView(
+              slivers: [
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(
+                      vertical: Dimens.of(context).paddingScreenVertical,
+                      horizontal: Dimens.of(context).paddingScreenHorizontal,
+                    ),
+                    child: HomeHeader(viewModel: widget.viewModel),
+                  ),
+                ),
+                SliverList.builder(
+                  itemCount: state.bookings.length,
+                  itemBuilder: (_, index) => _Booking(
+                    key: ValueKey(state.bookings[index].id),
+                    booking: state.bookings[index],
+                    onTap: () => context.push(
+                      Routes.bookingWithId(state.bookings[index].id),
+                    ),
+                    confirmDismiss: (_) async {
+                      await widget.viewModel.deleteBooking.execute(
+                        state.bookings[index].id,
+                      );
+                      return widget.viewModel.deleteBooking.completed;
+                    },
+                  ),
+                ),
+              ],
+            );
+          },
+        ),
+      ),
+    );
+  }
+
+  void _onResult() {
+    if (widget.viewModel.deleteBooking.completed) {
+      widget.viewModel.deleteBooking.clearResult();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(AppLocalization.of(context).bookingDeleted),
+        ),
+      );
+    }
+    if (widget.viewModel.deleteBooking.error) {
+      widget.viewModel.deleteBooking.clearResult();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(AppLocalization.of(context).errorWhileDeletingBooking),
+        ),
+      );
+    }
+  }
+}
+Yapılan Değişiklikler
+HomeViewState: Tüm state (bookings, user, isLoading, error) bir sınıfta toplandı. const constructor ile immutable hale getirildi.
+CopyWith: State güncellemeleri, copyWith metoduyla yeni bir HomeViewState nesnesi oluşturarak yapılıyor.
+ViewModel: _state değişkeni, tüm state'i temsil eder. Getter ile View'a sunulur.
+View: HomeScreen, widget.viewModel.state üzerinden state'e erişir. isLoading ve error gibi durumlar doğrudan HomeViewState'ten kontrol edilir.
+Immutable List: bookings, List.unmodifiable ile immutable olarak saklanır.
+Avantajlar
+Yapılandırılmış State: Tüm state, tek bir sınıfta toplanır ve yönetimi kolaylaşır.
+Esneklik: Yeni state özellikleri (örneğin, isRefreshing) eklemek kolaydır.
+Hata Yönetimi: error alanı, hata mesajlarını daha iyi yönetmek için kullanılabilir.
+Test Edilebilirlik: HomeViewState'in immutable olması, testlerde state karşılaştırmalarını kolaylaştırır.
+Dezavantajlar
+Daha fazla kod yazımı gerektirir (özellikle copyWith ve sınıf tanımları).
+Küçük projelerde biraz fazla yapılandırılmış gelebilir.
+5. Provider ile Entegrasyon
+Mevcut Provider yapını korurken, HomeViewModel'i ChangeNotifierProvider ile uygulama seviyesinde tanımlamaya devam edebilirsin:
+
+dart
+
+Copy
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MultiProvider(
+      providers: [
+        Provider<BookingRepository>(create: (_) => BookingRepositoryImpl()),
+        Provider<UserRepository>(create: (_) => UserRepositoryImpl()),
+        ChangeNotifierProvider(
+          create: (context) => HomeViewModel(
+            bookingRepository: context.read<BookingRepository>(),
+            userRepository: context.read<UserRepository>(),
+          ),
+        ),
+      ],
+      child: MaterialApp.router(
+        routerConfig: GoRouter(
+          routes: [
+            GoRoute(
+              path: Routes.home,
+              builder: (context, state) {
+                final viewModel = context.read<HomeViewModel>();
+                return HomeScreen(viewModel: viewModel);
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+Açıklama:
+
+HomeViewModel, ChangeNotifierProvider ile önbelleğe alınır.
+HomeViewState immutable olduğu için, ViewModel'in state değişiklikleri güvenli ve öngörülebilir şekilde View'a yansır.
+6. Ek Öneriler
+Equality Kontrolü: HomeViewState için Equatable veya freezed paketini kullanarak state karşılaştırmalarını optimize edebilirsin. Örneğin:
+dart
+
+Copy
+import 'package:equatable/equatable.dart';
+
+class HomeViewState extends Equatable {
+  final List<BookingSummary> bookings;
+  final User? user;
+  final bool isLoading;
+  final String? error;
+
+  const HomeViewState({
+    this.bookings = const [],
+    this.user,
+    this.isLoading = false,
+    this.error,
+  });
+
+  @override
+  List<Object?> get props => [bookings, user, isLoading, error];
+
+  HomeViewState copyWith({
+    List<BookingSummary>? bookings,
+    User? user,
+    bool? isLoading,
+    String? error,
+  }) {
+    return HomeViewState(
+      bookings: bookings ?? this.bookings,
+      user: user ?? this.user,
+      isLoading: isLoading ?? this.isLoading,
+      error: error ?? this.error,
+    );
+  }
+}
+Bu, gereksiz notifyListeners() çağrılarını önler.
+Loading ve Error Durumları: HomeViewState'e daha fazla durum ekleyerek (örneğin, isDeleting, isRefreshing), UI'daki farklı senaryoları daha iyi yönetebilirsin.
+Performans: ListenableBuilder'ın kapsamını daraltarak sadece state.bookings gibi belirli alanlara tepki verecek şekilde optimize edebilirsin:
+dart
+
+Copy
+ListenableBuilder(
+  listenable: widget.viewModel,
+  builder: (context, _) {
+    return SliverList.builder(
+      itemCount: widget.viewModel.state.bookings.length,
+      itemBuilder: (_, index) => _Booking(...),
+    );
+  },
+);
+7. Sonuç
+State'i immutable hale getirmek için Yöntem 2 (HomeViewState sınıfı), Provider ile çalışırken daha yapılandırılmış ve Clean Architecture'a uygun bir çözüm sunar. HomeViewState sınıfı, tüm state'i bir arada tutar ve copyWith ile güvenli güncellemeler sağlar. List.unmodifiable gibi araçlarla bookings listesinin immutable olmasını garantileyebilirsin. Mevcut Provider yapınla uyumlu şekilde, ChangeNotifierProvider kullanarak ViewModel'i önbelleğe almaya devam edebilirsin.
+
+Eğer bu konuda daha fazla detay (örneğin, Equatable entegrasyonu veya test yazımı) istersen, lütfen belirt! 😊
+
+
+Iki view model arasindaki iletisimi ortak view model tanimlayarak yapabilirsin.
+Ortak state'leri ilgili view model'de tutabiliriz.

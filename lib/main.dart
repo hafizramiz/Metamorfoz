@@ -2,7 +2,9 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:metamorfoz/ui/core/themes/dimens.dart';
 import 'package:provider/provider.dart';
 
 import 'ui/core/localization/applocalization.dart';
@@ -13,10 +15,14 @@ import 'package:flutter/material.dart';
 import 'ui/core/ui/scroll_behavior.dart';
 import 'main_development.dart' as development;
 
+/// Burdaki main metotu defualt olandir. Bunun icinde development'i cagiriyor
+/// default olarak ordan baslatiyor.
+
 /// Default main method
 void main() {
   // Launch development config by default
   development.main();
+  /// Development'in icindeki main metodu cagirilir.
 }
 
 class MainApp extends StatelessWidget {
@@ -24,6 +30,9 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+   print("Device type:${getDeviceType(context)}");
+
     return MaterialApp.router(
       localizationsDelegates: [
         GlobalWidgetsLocalizations.delegate,
@@ -38,3 +47,6 @@ class MainApp extends StatelessWidget {
     );
   }
 }
+
+
+

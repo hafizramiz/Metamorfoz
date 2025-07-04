@@ -41,6 +41,7 @@ class ResultsViewModel extends ChangeNotifier {
   ItineraryConfig? _itineraryConfig;
 
   /// Filter options to display on search bar
+  /// Burdaki [ItineraryConfig] bir model classtir.
   ItineraryConfig get config => _itineraryConfig ?? const ItineraryConfig();
 
   /// Perform search
@@ -50,6 +51,7 @@ class ResultsViewModel extends ChangeNotifier {
   late final Command1<void, String> updateItineraryConfig;
 
   Future<Result<void>> _search() async {
+    await Future.delayed(const Duration(seconds: 30));
     // Load current itinerary config
     final resultConfig = await _itineraryConfigRepository.getItineraryConfig();
     switch (resultConfig) {

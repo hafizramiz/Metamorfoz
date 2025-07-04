@@ -61,12 +61,6 @@ class _SearchFormSubmitState extends State<SearchFormSubmit> {
       ),
       child: ListenableBuilder(
         listenable: widget.viewModel,
-        child: SizedBox(
-          height: 52,
-          child: Center(
-            child: Text(AppLocalization.of(context).search),
-          ),
-        ),
         builder: (context, child) {
           return FilledButton(
             key: const ValueKey(searchFormSubmitButtonKey),
@@ -76,6 +70,12 @@ class _SearchFormSubmitState extends State<SearchFormSubmit> {
             child: child,
           );
         },
+        child: SizedBox(
+          height: 52,
+          child: Center(
+            child: Text(AppLocalization.of(context).search),
+          ),
+        ),
       ),
     );
   }

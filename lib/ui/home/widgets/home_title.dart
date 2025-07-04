@@ -40,6 +40,9 @@ class HomeHeader extends StatelessWidget {
                 height: Dimens.of(context).profilePictureSize,
               ),
             ),
+
+            /// Burda view modeli entegre etmis.
+            /// View modeli yeni obje olarak olusturmus.
             LogoutButton(
               viewModel: LogoutViewModel(
                 authRepository: context.read(),

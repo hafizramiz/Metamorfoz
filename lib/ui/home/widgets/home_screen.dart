@@ -24,6 +24,10 @@ import 'home_title.dart';
 
 const String bookingButtonKey = 'booking-button';
 
+// ValuNotifier<bool> testNotifier = ValueNotifier(false);
+
+
+
 /// [HomeScreen] render etmek icin viewmodel icindeki state'e ihtiyac duyar.
 /// O view modele erismek icin view'in constructor'ina arguman olarak gecilir.
 /// Home'dan searchRelative'e nasil gidiyor?
@@ -83,7 +87,7 @@ class _HomeScreenState extends State<HomeScreen> {
         top: false,
         bottom: true,
         child: ListenableBuilder(
-          listenable: widget.viewModel.load,
+            listenable: widget.viewModel.load,
           builder: (context, child) {
             print("home screen listenable builder called  ");
             if (widget.viewModel.load.running) {
@@ -118,7 +122,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   SliverList.builder(
                     itemCount: widget.viewModel.bookings.length,
-                    itemBuilder: (_, index) => _Booking(
+                    itemBuilder: (_, index) =>
+
+                        //Text("dddd")
+
+
+                        _Booking(
                       key: ValueKey(widget.viewModel.bookings[index].id),
                       booking: widget.viewModel.bookings[index],
                       onTap: () => context.push(

@@ -35,8 +35,7 @@ abstract final class Dimens {
   /// Get dimensions definition based on screen size
   factory Dimens.of(BuildContext context) =>
       switch (MediaQuery.sizeOf(context).width) {
-        > 600 => desktop,
-        _ => mobile,
+        > 600 => desktop, _ => mobile,
       };
 }
 
@@ -62,4 +61,20 @@ final class _DimensDesktop extends Dimens {
 
   @override
   final double profilePictureSize = 128.0;
+}
+
+
+
+
+/// Returns the device type based on the Dimens instance for the given context.
+String getDeviceType(BuildContext context) {
+  final dimens = Dimens.of(context);
+
+  if (dimens is _DimensMobile) {
+    return 'Device Type: Mobile';
+  } else if (dimens is _DimensDesktop) {
+    return 'Device Type: Tablet';
+  } else {
+    return 'Unknown Device Type';
+  }
 }
