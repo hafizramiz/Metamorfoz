@@ -2,6 +2,11 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+
+/// Burda bir hardcoded kullanıcı tanımlanmıştır.
+/// Bu kullanıcı, UserApi tarafından döndürülecektir.
+/// Gerçek bir uygulamada, bu bilgiler bir veritabanından alınır.
+
 import '../model/user/user.dart';
 
 abstract final class Constants {

@@ -20,7 +20,12 @@ class ApiClient {
     String? host,
     int? port,
     HttpClient Function()? clientFactory,
-  })  : _host = host ?? 'localhost',
+  })  : 
+
+  /// Burda eger host verilmediyse localhost olarak ayarlaniyor.
+  _host = host ?? 'localhost',
+  /// Eger port verilmediyse 8080 olarak ayarlaniyor. 
+  /// ApiClient olusturulurken port verilirse o ayarlanacak
         _port = port ?? 8080,
         _clientFactory = clientFactory ?? (() => HttpClient());
 
