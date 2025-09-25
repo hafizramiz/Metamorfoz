@@ -6,7 +6,12 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'booking_api_model.freezed.dart';
 part 'booking_api_model.g.dart';
-
+/// Request model ile response model birebir ayni oldugu zaman
+/// Ayri ayrilikta response ve request model olusturmak yerine
+/// tek bir model olusturulabilir.
+/// Ancak bu modelin adinin request veya response ile bitmemesine dikkat edilmeli.
+/// Ama login'de request ve response farkli oldugu icin ayri modeller olusturuldu.
+/// Digerlerinde apiModel olarak yazip gececegim.
 @freezed
 class BookingApiModel with _$BookingApiModel {
   const factory BookingApiModel({

@@ -22,6 +22,12 @@ class AuthApiClient {
   final int _port;
   final HttpClient Function() _clientFactory;
 
+
+  /// Burda iki farkli model kullanilir. Request ve Response.
+  /// Request atarken credetial bilgileri gonderilir.
+  /// Response olarak da token dondurulur.
+/// Burda bir create islemi olmadigi icin status code 200 doner.
+  /// Eger bir Create yapsaydi 201 donecekti.
   Future<Result<LoginResponse>> login(LoginRequest loginRequest) async {
     final client = _clientFactory();
     try {

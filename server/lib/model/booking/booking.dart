@@ -3,9 +3,15 @@
 // found in the LICENSE file.
 
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:server/routes/booking.dart';
 
 part 'booking.freezed.dart';
 part 'booking.g.dart';
+
+
+/// Burdaki Booking model server'in dondugu model
+/// [BookingApiModel] ise client'in kullandigi model
+
 
 @freezed
 class Booking with _$Booking {

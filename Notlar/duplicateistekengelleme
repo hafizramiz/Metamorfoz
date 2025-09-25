@@ -1,0 +1,84 @@
+
+/// DUPLICATE ISTEKLER NASIL ENGELLENIR?
+
+// @JsonSerializable(checked: true, explicitToJson: true)
+// final class ProfileProgressRequestModel
+//     extends BaseModel<ProfileProgressRequestModel> {
+
+//   /// Değiştirilecek progress adı
+//   final String progressName;
+
+//   /// İsteğin tekrarını engellemek için unique identifier
+//   final String requestId;
+
+//   /// Timestamp (opsiyonel - server-side validation için)
+//   final int? timestamp;
+
+//   /// User ID (güvenlik için)
+//   final int? userId;
+
+//   ProfileProgressRequestModel({
+//     required this.progressName,
+//     required this.requestId,
+//     this.timestamp,
+//     this.userId,
+//   });
+
+//   @override
+//   Map<String, dynamic> toJson() => _$ProfileProgressRequestModelToJson(this);
+
+//   factory ProfileProgressRequestModel.fromJson(Map<String, dynamic> json) =>
+//       _$ProfileProgressRequestModelFromJson(json);
+
+//   @override
+//   ProfileProgressRequestModel fromJson(json) =>
+//       ProfileProgressRequestModel.fromJson(json);
+
+//   @override
+//   List<Object?> get props => [progressName, requestId, timestamp, userId];
+// }
+
+
+// class ProfileProgressRepository {
+//   final Set<String> _pendingRequests = <String>{};
+
+//   Future<ZugiResponseModel> updateProgressName({
+//     required String progressName,
+//     int? userId,
+//   }) async {
+//     // Unique request ID oluştur
+//     final requestId = '${userId}_${progressName}_${DateTime.now().millisecondsSinceEpoch}';
+
+//     // Eğer aynı istek zaten pending durumda ise engelle
+//     if (_pendingRequests.contains(requestId)) {
+//       return ZugiResponseModel(
+//         errorMessage: "Request already in progress",
+//         statusCode: 429,
+//       );
+//     }
+
+//     try {
+//       // Request'i pending listesine ekle
+//       _pendingRequests.add(requestId);
+
+//       final requestModel = ProfileProgressRequestModel(
+//         progressName: progressName,
+//         requestId: requestId,
+//         timestamp: DateTime.now().millisecondsSinceEpoch,
+//         userId: userId,
+//       );
+
+//       final response = await dioClient.postRequest<ProfileProgressResponseModel, ProfileProgressResponseModel>(
+//         '/profile/progress',
+//         parserModel: ProfileProgressResponseModel(),
+//         data: requestModel.toJson(),
+//       );
+
+//       return response;
+
+//     } finally {
+//       // İstek tamamlandığında pending listesinden çıkar
+//       _pendingRequests.remove(requestId);
+//     }
+//   }
+// }

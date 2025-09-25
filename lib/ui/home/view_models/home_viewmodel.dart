@@ -118,9 +118,16 @@ class HomeViewModel extends ChangeNotifier {
     }
   }
 
+  /// Burda delete islemi yapiliyor
   Future<Result<void>> _deleteBooking(int id) async {
     print("_deleteBooking started");
     try {
+
+      /// Delete yapabilmek icin request olarak sadece id bilgisi veriliyor
+      /// Cunku id bilgisi ile booking repository ilgili kaydi bulup silebilir.
+      /// Delete islemi basarili olursa booking repository'den tekrar
+      /// booking listesi yeniden yukleniyor.Asagida bununla ilgili kod var.
+      /// Boylece UI'da silinen kayit gosterilmiyor.
       final resultDelete = await _bookingRepository.delete(id);
       switch (resultDelete) {
         case Ok<void>():

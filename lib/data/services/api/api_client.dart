@@ -41,6 +41,7 @@ class ApiClient {
     }
   }
 
+  /// Bu metot ile network request yapiliyor.
   Future<Result<List<Continent>>> getContinents() async {
     final client = _clientFactory();
     try {
@@ -150,7 +151,10 @@ class ApiClient {
       client.close();
     }
   }
-
+/// 200 OK: Veri başarıyla alındı (GET).
+// 201 Created: Yeni veri başarıyla oluşturuldu (POST).
+  ///
+  ///
   Future<Result<BookingApiModel>> postBooking(BookingApiModel booking) async {
     final client = _clientFactory();
     try {

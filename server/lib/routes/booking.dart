@@ -73,7 +73,14 @@ class BookingApi {
       );
     });
 
+
+    /// Http request'lerde created response'i gondermek istiyorsan 201 gonder.
+    /// 201 gelen post request'in basariyla olusturuldugunu gosterir.
     // Save a new booking
+    /// Buraya request olarak gelen model de Booking modelidir.
+    /// Booking modeli aliyor tekrar ayni modeli donuyor.
+    /// Id'sini artirip yeni id ile birlikte donuyor.
+    /// Kodu 201 olarak doner.
     router.post('/', (Request request) async {
       final body = await request.readAsString();
       final booking = Booking.fromJson(json.decode(body));
@@ -91,6 +98,8 @@ class BookingApi {
       _bookings.add(bookingWithId);
 
       // Respond with newly created booking
+      /// Yeni olusturulan obje tekrar geri dondurulur.
+      /// Kodu 201 olarak doner.
       return Response(
         201, // created
         body: json.encode(bookingWithId),
@@ -98,6 +107,11 @@ class BookingApi {
       );
     });
 
+    /// Delete yaparken geriye herhangi bir model donulmuyor.
+    /// Sadece 204 kodu donuluyor. Eger basarili ise 204 doner
+    /// Eger silemezse Invalid id doner. Ilgili id'yi bulamamamis demektir.
+/// Delete islemi id uzerinden yapilir. Request (id parametre üzerinden) gerceklestirilir
+    ///
     // Delete booking
     router.delete('/<id>', (Request request, String id) async {
       final bookingId = int.parse(id);
@@ -107,7 +121,8 @@ class BookingApi {
         return Response.notFound('Invalid id');
       }
       _bookings.remove(booking);
-      // 240: no content
+      /// Delete yaparken 204 no content kodu donulur.
+      // 204: no content
       return Response(204);
     });
 
